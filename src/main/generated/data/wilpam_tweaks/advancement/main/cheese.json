@@ -1,0 +1,32 @@
+{
+  "parent": "wilpam_tweaks:main/root",
+  "criteria": {
+    "obtain_cheese": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wilpam_tweaks:cheese"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.wilpam_tweaks.cheese.description"
+    },
+    "icon": {
+      "id": "wilpam_tweaks:cheese"
+    },
+    "title": {
+      "translate": "advancements.wilpam_tweaks.cheese.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_cheese"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

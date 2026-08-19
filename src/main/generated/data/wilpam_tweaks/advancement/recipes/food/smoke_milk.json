@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_dough": {
+    "has_milk": {
       "conditions": {
         "items": [
           {
-            "items": "wilpam_tweaks:dough"
+            "items": "minecraft:milk_bucket"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:slimeball_substrate"
+        "recipe": "wilpam_tweaks:smoke_milk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_dough"
+      "has_milk"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:slimeball_substrate"
+      "wilpam_tweaks:smoke_milk"
     ]
   }
 }

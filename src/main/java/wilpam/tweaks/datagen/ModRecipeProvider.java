@@ -76,13 +76,13 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                 SimpleCookingRecipeBuilder.smoking(
                                 Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD,
                                 ModItems.CHEESE, 0.25f, 100)
-                        .unlockedBy("has_milk", has(ModItems.DOUGH))
+                        .unlockedBy("has_milk", has(Items.MILK_BUCKET))
                         .save(output, "smoke_milk");
 
                 SimpleCookingRecipeBuilder.smelting(
                                 Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD, CookingBookCategory.FOOD,
                                 ModItems.CHEESE, 0.25f, 200)
-                        .unlockedBy("has_milk", has(ModItems.DOUGH))
+                        .unlockedBy("has_milk", has(Items.MILK_BUCKET))
                         .save(output, "cook_milk");
             }
         };

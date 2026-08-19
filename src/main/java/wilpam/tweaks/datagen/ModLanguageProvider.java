@@ -16,6 +16,7 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("block.wilpam_tweaks.flint_block", "Flint Block");
         translationBuilder.add("item.wilpam_tweaks.flint_block", "Flint Block");
         translationBuilder.add("item.wilpam_tweaks.dough", "Dough");
+        translationBuilder.add("item.wilpam_tweaks.cheese", "Cheese");
         translationBuilder.add("item.wilpam_tweaks.slimeball_substrate", "Slimeball Substrate");
 
         translationBuilder.add("advancements.wilpam_tweaks.root.title", "Wilpam Tweaks");

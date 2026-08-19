@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "wilpam_tweaks:dough",
+    "minecraft:lime_dye",
+    "minecraft:water_bucket"
+  ],
+  "result": {
+    "id": "wilpam_tweaks:slimeball_substrate"
+  }
+}

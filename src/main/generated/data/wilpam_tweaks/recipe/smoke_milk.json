@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "experience": 0.25,
+  "ingredient": "minecraft:milk_bucket",
+  "result": {
+    "id": "wilpam_tweaks:cheese"
+  }
+}

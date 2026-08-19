@@ -1,11 +1,14 @@
 {
-  "advancements.wilpam_tweaks.flint_block.description": "Smash flint together to craft a Flint Block",
-  "advancements.wilpam_tweaks.flint_block.title": "Eye of Flint",
-  "advancements.wilpam_tweaks.root.description": "The start of a sturdier world",
+  "advancements.wilpam_tweaks.cheese.description": "Smoke a Milk Bucket into Cheese",
+  "advancements.wilpam_tweaks.cheese.title": "Stop Being So Cheesy",
+  "advancements.wilpam_tweaks.flint_block.description": "Put some flint together to craft a Flint Block",
+  "advancements.wilpam_tweaks.flint_block.title": "We Didn't Start the Fire",
+  "advancements.wilpam_tweaks.root.description": "new WilpamTweaks()",
   "advancements.wilpam_tweaks.root.title": "Wilpam Tweaks",
   "advancements.wilpam_tweaks.slimeball.description": "Smelt Slimeball Substrate into a Slimeball",
-  "advancements.wilpam_tweaks.slimeball.title": "Sticky Situation",
+  "advancements.wilpam_tweaks.slimeball.title": "Real Slimeballs Not Clickbait",
   "block.wilpam_tweaks.flint_block": "Flint Block",
+  "item.wilpam_tweaks.cheese": "Cheese",
   "item.wilpam_tweaks.dough": "Dough",
   "item.wilpam_tweaks.flint_block": "Flint Block",
   "item.wilpam_tweaks.slimeball_substrate": "Slimeball Substrate"

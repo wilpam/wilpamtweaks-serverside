@@ -40,6 +40,9 @@ public final class ModModelProvider implements DataProvider {
         Path substrateModel = itemPaths.json(ModItems.SLIMEBALL_SUBSTRATE_ID);
         futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/slimeball_substrate"), substrateModel));
 
+        Path cheeseModel = itemPaths.json(ModItems.CHEESE_ID);
+        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/cheese"), cheeseModel));
+
         Path iconModel = itemPaths.json(Identifier.fromNamespaceAndPath(ModBlocks.ID, "wilpam_icon"));
         futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/wilpam_icon"), iconModel));
 

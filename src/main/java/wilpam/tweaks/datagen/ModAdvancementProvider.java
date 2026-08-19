@@ -83,11 +83,9 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .addCriterion("smelt_slimeball_substrate",
-                        RecipeCraftedTrigger.TriggerInstance.craftedItem(
-                                ResourceKey.create(Registries.RECIPE,
-                                        Identifier.fromNamespaceAndPath(ModBlocks.ID, "cook_slimeball"))))
-                .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/slimeball"));
+                .addCriterion("obtain_cheese",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CHEESE))
+                .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/cheese"));
     }
 
     @Override
