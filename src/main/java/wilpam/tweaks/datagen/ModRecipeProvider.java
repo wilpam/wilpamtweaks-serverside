@@ -46,14 +46,14 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .requires(ItemTags.LEAVES)
                         .requires(Items.WATER_BUCKET)
                         .unlockedBy("has_dough", has(ModItems.DOUGH))
-                        .save(output, "slimeball_substrate");
+                        .save(output, "slimeball_substrate_leaves");
 
                 ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE)
                         .requires(ModItems.DOUGH)
                         .requires(Items.DYE.lime())
                         .requires(Items.WATER_BUCKET)
                         .unlockedBy("has_dough", has(ModItems.DOUGH))
-                        .save(output, "slimeball_substrate");
+                        .save(output, "slimeball_substrate_dye");
 
                 SimpleCookingRecipeBuilder.smelting(
                                 Ingredient.of(ModItems.DOUGH), RecipeCategory.FOOD, CookingBookCategory.FOOD,
