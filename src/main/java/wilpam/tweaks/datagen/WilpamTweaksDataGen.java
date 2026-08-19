@@ -9,6 +9,7 @@ public final class WilpamTweaksDataGen implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(ModRecipeProvider::new);
         pack.addProvider(ModAdvancementProvider::new);
+        pack.addProvider(ModBlockLootTableProvider::new);
         pack.addProvider(ModLanguageProvider::new);
         pack.addProvider(ModModelProvider::new);
         pack.addProvider(ModBlockTagsProvider::new);

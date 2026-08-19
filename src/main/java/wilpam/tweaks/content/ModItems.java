@@ -60,9 +60,9 @@ public final class ModItems {
     }
 
     public static void register() {
-        Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, DOUGH_ID, DOUGH);
-        Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
-        Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
-        Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
+        Registry.register(BuiltInRegistries.ITEM, DOUGH_ID, DOUGH);
+        Registry.register(BuiltInRegistries.ITEM, SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
+        Registry.register(BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
+        Registry.register(BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
     }
 }

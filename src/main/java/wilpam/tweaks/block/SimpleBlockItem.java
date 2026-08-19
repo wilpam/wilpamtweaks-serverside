@@ -7,21 +7,22 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
 
-public class FlintBlockItem extends BlockItem implements PolymerItem {
+public class SimpleBlockItem extends BlockItem implements PolymerItem {
     private final Identifier modelId;
+    private final Item fallbackItem;
 
-    public FlintBlockItem(Block block, Properties settings, Identifier modelId) {
+    public SimpleBlockItem(Block block, Properties settings, Item fallbackItem, Identifier modelId) {
         super(block, settings);
+        this.fallbackItem = fallbackItem;
         this.modelId = modelId;
     }
 
     @Override
     public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
-        return Items.STONE;
+        return fallbackItem;
     }
 
     @Override

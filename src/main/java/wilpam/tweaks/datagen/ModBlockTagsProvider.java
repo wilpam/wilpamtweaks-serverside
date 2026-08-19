@@ -4,9 +4,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import wilpam.tweaks.block.FlintBlock;
+import wilpam.tweaks.content.ModBlocks;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +24,8 @@ public final class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProv
                         key(Blocks.IRON_TRAPDOOR), key(Blocks.CAULDRON), key(Blocks.IRON_CHAIN), key(Blocks.HOPPER),
                         key(Blocks.IRON_ORE), key(Blocks.DEEPSLATE_IRON_ORE), key(Blocks.ANVIL), key(Blocks.CHIPPED_ANVIL),
                         key(Blocks.DAMAGED_ANVIL));
+
+        builder(BlockTags.MINEABLE_WITH_PICKAXE).add(key(ModBlocks.FLINT_BLOCK));
     }
 
     private static ResourceKey<Block> key(Block block) {
