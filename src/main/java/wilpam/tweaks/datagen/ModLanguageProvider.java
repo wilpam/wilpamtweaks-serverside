@@ -19,11 +19,13 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.wilpam_tweaks.slimeball_substrate", "Slimeball Substrate");
 
         translationBuilder.add("advancements.wilpam_tweaks.root.title", "Wilpam Tweaks");
-        translationBuilder.add("advancements.wilpam_tweaks.root.description", "The start of a sturdier world");
-        translationBuilder.add("advancements.wilpam_tweaks.flint_block.title", "Eye of Flint");
-        translationBuilder.add("advancements.wilpam_tweaks.flint_block.description", "Smash flint together to craft a Flint Block");
-        translationBuilder.add("advancements.wilpam_tweaks.slimeball.title", "Sticky Situation");
+        translationBuilder.add("advancements.wilpam_tweaks.root.description", "new WilpamTweaks()");
+        translationBuilder.add("advancements.wilpam_tweaks.flint_block.title", "We Didn't Start the Fire");
+        translationBuilder.add("advancements.wilpam_tweaks.flint_block.description", "Put some flint together to craft a Flint Block");
+        translationBuilder.add("advancements.wilpam_tweaks.slimeball.title", "Real Slimeballs Not Clickbait");
         translationBuilder.add("advancements.wilpam_tweaks.slimeball.description", "Smelt Slimeball Substrate into a Slimeball");
+        translationBuilder.add("advancements.wilpam_tweaks.cheese.title", "Stop Being So Cheesy");
+        translationBuilder.add("advancements.wilpam_tweaks.cheese.description", "Smoke a Milk Bucket into Cheese");
     }
 
     @Override

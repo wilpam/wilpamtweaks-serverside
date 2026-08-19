@@ -48,6 +48,13 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy("has_dough", has(ModItems.DOUGH))
                         .save(output, "slimeball_substrate");
 
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE)
+                        .requires(ModItems.DOUGH)
+                        .requires(Items.DYE.lime())
+                        .requires(Items.WATER_BUCKET)
+                        .unlockedBy("has_dough", has(ModItems.DOUGH))
+                        .save(output, "slimeball_substrate");
+
                 SimpleCookingRecipeBuilder.smelting(
                                 Ingredient.of(ModItems.DOUGH), RecipeCategory.FOOD, CookingBookCategory.FOOD,
                                 Items.BREAD, 0.25f, 200)
@@ -65,6 +72,18 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                                 Items.SLIME_BALL, 2f, 800)
                         .unlockedBy("has_slimeball_substrate", has(ModItems.SLIMEBALL_SUBSTRATE))
                         .save(output, "cook_slimeball");
+
+                SimpleCookingRecipeBuilder.smoking(
+                                Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD,
+                                ModItems.CHEESE, 0.25f, 100)
+                        .unlockedBy("has_milk", has(ModItems.DOUGH))
+                        .save(output, "smoke_milk");
+
+                SimpleCookingRecipeBuilder.smelting(
+                                Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                                ModItems.CHEESE, 0.25f, 200)
+                        .unlockedBy("has_milk", has(ModItems.DOUGH))
+                        .save(output, "cook_milk");
             }
         };
     }

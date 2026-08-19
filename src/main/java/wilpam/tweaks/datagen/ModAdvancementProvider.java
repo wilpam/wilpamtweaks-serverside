@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import wilpam.tweaks.content.ModBlocks;
+import wilpam.tweaks.content.ModItems;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -28,7 +29,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
     public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
         AdvancementHolder root = Advancement.Builder.advancement()
                 .display(
-                        ModBlocks.FLINT_BLOCK_ITEM,
+                        ModItems.WILPAM_ICON,
                         Component.translatable("advancements.wilpam_tweaks.root.title"),
                         Component.translatable("advancements.wilpam_tweaks.root.description"),
                         Identifier.fromNamespaceAndPath(ModBlocks.ID, "block/flint_block"),
@@ -60,6 +61,23 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                         Items.SLIME_BALL,
                         Component.translatable("advancements.wilpam_tweaks.slimeball.title"),
                         Component.translatable("advancements.wilpam_tweaks.slimeball.description"),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false)
+                .addCriterion("smelt_slimeball_substrate",
+                        RecipeCraftedTrigger.TriggerInstance.craftedItem(
+                                ResourceKey.create(Registries.RECIPE,
+                                        Identifier.fromNamespaceAndPath(ModBlocks.ID, "cook_slimeball"))))
+                .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/slimeball"));
+
+        Advancement.Builder.advancement()
+                .parent(root)
+                .display(
+                        ModItems.CHEESE,
+                        Component.translatable("advancements.wilpam_tweaks.cheese.title"),
+                        Component.translatable("advancements.wilpam_tweaks.cheese.description"),
                         null,
                         AdvancementType.TASK,
                         true,

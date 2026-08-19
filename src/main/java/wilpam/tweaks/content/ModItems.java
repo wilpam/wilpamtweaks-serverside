@@ -21,10 +21,11 @@ public final class ModItems {
     public static final Identifier DOUGH_ID = Identifier.fromNamespaceAndPath(ID, "dough");
     public static final Identifier WILPAM_ICON_ID = Identifier.fromNamespaceAndPath(ID, "wilpam_icon");
     public static final Identifier SLIMEBALL_SUBSTRATE_ID = Identifier.fromNamespaceAndPath(ID, "slimeball_substrate");
+    public static final Identifier CHEESE_ID = Identifier.fromNamespaceAndPath(ID, "cheese");
 
     public static final BasicPolymerItem DOUGH = new BasicPolymerItem(
             new Item.Properties().food(
-                    new FoodProperties.Builder().nutrition(2).saturationModifier(0).build()
+                    new FoodProperties.Builder().nutrition(2).saturationModifier(1.2f).build()
             ).setId(ResourceKey.create(Registries.ITEM, DOUGH_ID)),
             Identifier.fromNamespaceAndPath(ID, "-/item/dough"),
             Items.CLAY_BALL);
@@ -43,6 +44,13 @@ public final class ModItems {
             Identifier.fromNamespaceAndPath(ID, "-/item/slimeball_substrate"),
             Items.SLIME_BALL);
 
+    public static final BasicPolymerItem CHEESE = new BasicPolymerItem(
+            new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(3).saturationModifier(1.5f).build()
+            ).setId(ResourceKey.create(Registries.ITEM, CHEESE_ID)),
+            Identifier.fromNamespaceAndPath(ID, "-/item/cheese"),
+            Items.MILK_BUCKET);
+
     public static final BasicPolymerItem WILPAM_ICON = new BasicPolymerItem(
             new Item.Properties().setId(ResourceKey.create(Registries.ITEM, WILPAM_ICON_ID)),
             Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
@@ -55,5 +63,6 @@ public final class ModItems {
         Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, DOUGH_ID, DOUGH);
         Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
         Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
+        Registry.register((Registry<? super Item>) (Registry<?>) BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
     }
 }
