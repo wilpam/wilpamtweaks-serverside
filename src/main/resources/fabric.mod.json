@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "wilpam_tweaks",
+  "version": "${version}",
+  "name": "Wilpam Tweaks",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/wilpam_tweaks/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "wilpam.tweaks.WilpamTweaks"
+    ]
+  },
+  "mixins": [
+    "wilpam_tweaks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}",
+    "polymer-core": ">=${polymer_version}",
+    "polymer-resource-pack": ">=${polymer_version}",
+    "polymer-blocks": ">=${polymer_version}",
+    "polymer-autohost": ">=${polymer_version}",
+    "polymer-resource-pack-extras": ">=${polymer_version}"
+  }
+}

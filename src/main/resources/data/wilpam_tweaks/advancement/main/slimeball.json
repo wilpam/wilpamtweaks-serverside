@@ -1,0 +1,29 @@
+{
+  "parent": "wilpam_tweaks:main/root",
+  "criteria": {
+    "smelt_slimeball_substrate": {
+      "conditions": {
+        "recipe_id": "wilpam_tweaks:cook_slimeball"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.wilpam_tweaks.slimeball.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:slime_ball"
+    },
+    "title": {
+      "translate": "advancements.wilpam_tweaks.slimeball.title"
+    }
+  },
+  "requirements": [
+    [
+      "smelt_slimeball_substrate"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

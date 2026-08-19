@@ -1,0 +1,4 @@
+# Copy this file to exaroton.properties (gitignored) and fill in your token.
+# Alternatively set the EXAROTON_TOKEN environment variable
+# or pass -PexarotonToken=<token> to Gradle.
+apiToken=

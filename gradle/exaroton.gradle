@@ -1,0 +1,261 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.exaroton:api:2.4.1'
+    }
+}
+
+def exarotonProps() {
+    def propsFile = rootProject.file('exaroton.properties')
+    if (!propsFile.exists()) {
+        return null
+    }
+    def props = new Properties()
+    propsFile.withInputStream { props.load(it) }
+    return props
+}
+
+def exarotonServerId() {
+    def props = exarotonProps()
+    if (props != null && props.getProperty('serverId') != null) {
+        return props.getProperty('serverId')
+    }
+    return providers.gradleProperty('exarotonServerId').getOrElse('gg2r65YbfyeS5GkU')
+}
+
+def obtainExarotonToken() {
+    // Order: env var > gradle property (-PexarotonToken=...) > exaroton.properties (gitignored)
+    def token = providers.environmentVariable('EXAROTON_TOKEN').getOrNull()
+    if (token == null || token.isEmpty()) {
+        token = providers.gradleProperty('exarotonToken').getOrNull()
+    }
+    if (token == null || token.isEmpty()) {
+        def props = exarotonProps()
+        if (props != null) {
+            token = props.getProperty('apiToken')
+        }
+    }
+    if (token == null || token.isEmpty()) {
+        throw new GradleException(
+                'Exaroton API token not found. Set EXAROTON_TOKEN, pass -PexarotonToken=..., or create exaroton.properties (gitignored) with apiToken=...'
+        )
+    }
+    return token
+}
+
+def exarotonClient() {
+    return new com.exaroton.api.ExarotonClient(obtainExarotonToken())
+}
+
+def exarotonModsDir() {
+    return providers.gradleProperty('exarotonModsDir').getOrElse('/mods')
+}
+
+// Resolves the fabric-api jar so it can be deployed alongside the mod.
+configurations {
+    exarotonJars
+}
+dependencies {
+    exarotonJars "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+tasks.register('deployToExaroton') {
+    group = 'exaroton'
+    description = 'Builds the mod and deploys it to the Exaroton test server'
+    dependsOn tasks.named('build')
+
+    doLast {
+        def client = exarotonClient()
+        def server = client.getServer(exarotonServerId())
+        server.fetch().join()
+
+        def software = server.getSoftware()
+        logger.lifecycle("Server: {} ({})\n  status: {}\n  software: {} {}",
+                server.getName(), server.getAddress(), server.getStatus(), software?.getName(), software?.getVersion())
+
+        if (software != null && !software.getName().toLowerCase(Locale.ROOT).contains('fabric')) {
+            logger.warn('Server is not running Fabric software ({}) - the mod will not load. Switch the software to Fabric in the Exaroton panel.', software.getName())
+        }
+
+        def jarFile = tasks.named('jar').get().archiveFile.get().asFile
+        if (!jarFile.exists()) {
+            throw new GradleException("Built jar not found: ${jarFile}")
+        }
+
+        // Upload the mod jar plus the fabric-api "fat" jar (single jar, Polymer/fabric-api are required by the mod).
+        // Only the aggregated fabric-api jar is deployed - its module jars are already nested inside it.
+        def filesToUpload = [jarFile]
+        def fabricApiJars = configurations.exarotonJars.files.findAll { f -> f.getName().matches('fabric-api-[0-9].*\\.jar') }
+        if (fabricApiJars.isEmpty()) {
+            logger.warn('Could not resolve the fabric-api jar for deployment - the server may fail to start without it.')
+        } else {
+            filesToUpload.addAll(fabricApiJars)
+        }
+
+        // Mods are loaded from {exarotonModsDir}. Create it (and any parents) if missing.
+        def dirsToEnsure = []
+        def parts = []
+        for (def part : exarotonModsDir().split('/').findAll { !it.isEmpty() }) {
+            parts << part
+            dirsToEnsure << ('/' + parts.join('/'))
+        }
+        for (def dir : dirsToEnsure) {
+            def f = server.getFile(dir)
+            def exists = false
+            try {
+                f.fetch().join()
+                exists = f.isDirectory()
+            } catch (ignored) {
+                // does not exist yet
+            }
+            if (!exists) {
+                try {
+                    f.createAsDirectory().join()
+                    logger.lifecycle('Created exaroton directory {}', dir)
+                } catch (ignored) {
+                    // already exists or the backend rejected it; an upload failure below will surface the real problem
+                }
+            }
+        }
+
+        def force = providers.gradleProperty('exaroton.force').getOrElse('false').toBoolean()
+        def uploadedAny = false
+        for (def file : filesToUpload) {
+            def target = server.getFile(exarotonModsDir() + '/' + file.getName())
+
+            def remoteSize = -1L
+            if (!force) {
+                try {
+                    target.fetch().join()
+                    remoteSize = target.getSize()
+                } catch (ignored) {
+                    // file not present on the server
+                }
+            }
+            if (remoteSize == file.length()) {
+                logger.lifecycle('Skipping {} (already up to date).', file.getName())
+                continue
+            }
+
+            logger.lifecycle('Uploading {} to {}', file.getName(), target.getPath())
+            target.upload(file.toPath()).join()
+            logger.lifecycle('Uploaded {} successfully.', file.getName())
+            uploadedAny = true
+        }
+
+        // Remove outdated standalone fabric-api module jars - they're now nested inside the
+        // aggregated fabric-api jar and keeping both would cause duplicate mod ids.
+        def staleJars = configurations.exarotonJars.files.findAll { f -> !f.getName().matches('fabric-api-[0-9].*\\.jar') }
+        for (def stale : staleJars) {
+            def staleFile = server.getFile(exarotonModsDir() + '/' + stale.getName())
+            def exists = false
+            try {
+                staleFile.fetch().join()
+                exists = true
+            } catch (ignored) {
+                // not present, nothing to clean
+            }
+            if (exists) {
+                try {
+                    staleFile.delete().join()
+                    logger.lifecycle('Removed {} (superseded by the aggregated fabric-api jar).', stale.getName())
+                    uploadedAny = true
+                } catch (ignored) {
+                    logger.warn('Could not remove {} - delete it manually from the mods folder.', stale.getName())
+                }
+            }
+        }
+
+        if (!uploadedAny && !force) {
+            logger.lifecycle('Nothing changed - skipping server start/restart. Use -Pexaroton.force=true to force a restart.')
+            return
+        }
+
+        def skipStart = providers.gradleProperty('exaroton.noStart').getOrElse('false').toBoolean()
+        if (skipStart) {
+            logger.lifecycle('Skipping server start/restart (exaroton.noStart=true).')
+            return
+        }
+
+        // Polling helper (avoids websocket subscriptions that could keep the Gradle daemon alive).
+        def awaitStatus = { Collection targets, int timeoutMillis ->
+            def deadline = System.currentTimeMillis() + timeoutMillis
+            while (System.currentTimeMillis() < deadline) {
+                try {
+                    server.fetch(true).join()
+                } catch (ignored) {
+                    // transient offline
+                }
+                if (targets.contains(server.getStatus())) {
+                    return true
+                }
+                Thread.sleep(2500)
+            }
+            return false
+        }
+
+        def ONLINE = com.exaroton.api.server.ServerStatus.ONLINE
+        def OFFLINE = com.exaroton.api.server.ServerStatus.OFFLINE
+        def CRASHED = com.exaroton.api.server.ServerStatus.CRASHED
+
+        // Wait for a server that is mid-transition (starting/stopping/saving/...) to settle.
+        def settled = [ONLINE, OFFLINE, CRASHED]
+        def status = server.getStatus()
+        if (!settled.contains(status)) {
+            logger.lifecycle('Server is transitioning ({}), waiting for it to settle...', status)
+            if (!awaitStatus(settled, 180_000)) {
+                logger.warn('Server did not settle within 3 minutes (status: {}). Skipping start/restart.', server.getStatus())
+                return
+            }
+            status = server.getStatus()
+        }
+
+        if (status == ONLINE) {
+            logger.lifecycle('Server is online, restarting to load the new mod...')
+            server.restart().join()
+        } else {
+            logger.lifecycle('Server is {}, starting...', status)
+            server.start().join()
+        }
+
+        logger.lifecycle('Waiting for the server to come online...')
+        def ok = awaitStatus([ONLINE], 180_000)
+        if (!ok) {
+            def finalStatus = server.getStatus()
+            if (finalStatus == CRASHED) {
+                throw new GradleException('Server crashed while starting. Check the server logs for the error.')
+            }
+            logger.warn('Server did not reach ONLINE within 3 minutes (status: {}).', finalStatus)
+        } else {
+            logger.lifecycle('Server is ONLINE at {}', server.getAddress())
+        }
+    }
+}
+
+tasks.register('exarotonStatus') {
+    group = 'exaroton'
+    description = 'Shows the current Exaroton server status (read-only)'
+    doLast {
+        def client = exarotonClient()
+        def server = client.getServer(exarotonServerId())
+        server.fetch().join()
+        def software = server.getSoftware()
+        logger.lifecycle('Server: {} ({}) | status: {} | software: {} {}'.toString(),
+                server.getName(), server.getAddress(), server.getStatus(), software?.getName(), software?.getVersion())
+    }
+}
+
+tasks.register('exarotonLogs') {
+    group = 'exaroton'
+    description = 'Prints the tail of the Exaroton server log'
+    doLast {
+        def client = exarotonClient()
+        def server = client.getServer(exarotonServerId())
+        def content = server.getLog().join().getContent()
+        def lines = (content == null ? '' : content).split('\r?\n')
+        def tail = lines.length <= 400 ? lines : lines[-400..-1]
+        tail.each { println it }
+    }
+}

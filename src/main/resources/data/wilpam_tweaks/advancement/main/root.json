@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "on_join": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:gui/advancements/backgrounds/stone",
+    "description": {
+      "translate": "advancements.wilpam_tweaks.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "wilpam_tweaks:wilpam_icon"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.wilpam_tweaks.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "on_join"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

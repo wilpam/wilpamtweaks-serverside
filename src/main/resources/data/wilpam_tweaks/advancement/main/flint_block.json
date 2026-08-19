@@ -1,0 +1,33 @@
+{
+  "parent": "wilpam_tweaks:main/root",
+  "criteria": {
+    "obtain_flint_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wilpam_tweaks:flint_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.wilpam_tweaks.flint_block.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "wilpam_tweaks:flint_block"
+    },
+    "title": {
+      "translate": "advancements.wilpam_tweaks.flint_block.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_flint_block"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

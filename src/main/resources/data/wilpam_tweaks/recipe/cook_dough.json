@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": "wilpam_tweaks:dough",
+  "cookingtime": 200,
+  "experience": 0.25,
+  "result": {
+    "id": "minecraft:bread"
+  }
+}

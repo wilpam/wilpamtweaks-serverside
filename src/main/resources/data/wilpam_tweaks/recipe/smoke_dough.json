@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": "wilpam_tweaks:dough",
+  "cookingtime": 100,
+  "experience": 0.25,
+  "result": {
+    "id": "minecraft:bread"
+  }
+}
