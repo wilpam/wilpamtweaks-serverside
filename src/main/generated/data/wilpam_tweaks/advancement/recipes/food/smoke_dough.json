@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_slimeball_substrate": {
+    "has_dough": {
       "conditions": {
         "items": [
           {
-            "items": "wilpam_tweaks:slimeball_substrate"
+            "items": "wilpam_tweaks:dough"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:cook_slimeball"
+        "recipe": "wilpam_tweaks:smoke_dough"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_slimeball_substrate"
+      "has_dough"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:cook_slimeball"
+      "wilpam_tweaks:smoke_dough"
     ]
   }
 }

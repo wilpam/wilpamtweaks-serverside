@@ -6,13 +6,12 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "minecraft:gui/advancements/backgrounds/stone",
+    "background": "wilpam_tweaks:block/flint_block",
     "description": {
       "translate": "advancements.wilpam_tweaks.root.description"
     },
     "icon": {
-      "count": 1,
-      "id": "wilpam_tweaks:wilpam_icon"
+      "id": "wilpam_tweaks:flint_block"
     },
     "show_toast": false,
     "title": {
@@ -24,5 +23,5 @@
       "on_join"
     ]
   ],
-  "sends_telemetry_event": false
+  "sends_telemetry_event": true
 }

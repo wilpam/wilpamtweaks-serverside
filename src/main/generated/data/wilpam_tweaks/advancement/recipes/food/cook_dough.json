@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:smoke_dough"
+        "recipe": "wilpam_tweaks:cook_dough"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:smoke_dough"
+      "wilpam_tweaks:cook_dough"
     ]
   }
 }

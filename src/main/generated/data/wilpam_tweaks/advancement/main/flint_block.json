@@ -17,7 +17,6 @@
       "translate": "advancements.wilpam_tweaks.flint_block.description"
     },
     "icon": {
-      "count": 1,
       "id": "wilpam_tweaks:flint_block"
     },
     "title": {
@@ -29,5 +28,5 @@
       "obtain_flint_block"
     ]
   ],
-  "sends_telemetry_event": false
+  "sends_telemetry_event": true
 }

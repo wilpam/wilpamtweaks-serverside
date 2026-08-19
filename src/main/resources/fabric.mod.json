@@ -12,6 +12,9 @@
   "entrypoints": {
     "main": [
       "wilpam.tweaks.WilpamTweaks"
+    ],
+    "fabric-datagen": [
+      "wilpam.tweaks.datagen.WilpamTweaksDataGen"
     ]
   },
   "mixins": [

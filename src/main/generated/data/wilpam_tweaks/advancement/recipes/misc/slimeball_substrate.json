@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:cook_dough"
+        "recipe": "wilpam_tweaks:slimeball_substrate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:cook_dough"
+      "wilpam_tweaks:slimeball_substrate"
     ]
   }
 }

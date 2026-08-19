@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_wheat": {
+    "has_flint": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:wheat"
+            "items": "minecraft:flint"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:dough_from_wheat"
+        "recipe": "wilpam_tweaks:flint_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_wheat"
+      "has_flint"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:dough_from_wheat"
+      "wilpam_tweaks:flint_block"
     ]
   }
 }

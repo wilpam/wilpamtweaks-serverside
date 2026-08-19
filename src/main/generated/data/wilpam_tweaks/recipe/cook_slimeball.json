@@ -1,8 +1,8 @@
 {
   "type": "minecraft:smelting",
-  "ingredient": "wilpam_tweaks:slimeball_substrate",
   "cookingtime": 800,
-  "experience": 2,
+  "experience": 2.0,
+  "ingredient": "wilpam_tweaks:slimeball_substrate",
   "result": {
     "id": "minecraft:slime_ball"
   }

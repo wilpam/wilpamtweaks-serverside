@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_flint": {
+    "has_slimeball_substrate": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:flint"
+            "items": "wilpam_tweaks:slimeball_substrate"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wilpam_tweaks:flint_block"
+        "recipe": "wilpam_tweaks:cook_slimeball"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_flint"
+      "has_slimeball_substrate"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wilpam_tweaks:flint_block"
+      "wilpam_tweaks:cook_slimeball"
     ]
   }
 }

@@ -13,7 +13,6 @@
       "translate": "advancements.wilpam_tweaks.slimeball.description"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:slime_ball"
     },
     "title": {
@@ -25,5 +24,5 @@
       "smelt_slimeball_substrate"
     ]
   ],
-  "sends_telemetry_event": false
+  "sends_telemetry_event": true
 }

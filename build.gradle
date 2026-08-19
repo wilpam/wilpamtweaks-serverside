@@ -39,6 +39,11 @@ dependencies {
     implementation include("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
 }
 
+// Data generation (run with `./gradlew runDatagen`)
+fabricApi {
+    configureDataGeneration()
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
