@@ -4,7 +4,8 @@
   "package": "wilpam.tweaks.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "PistonMovingBlockEntityMixin"
+    "PistonMovingBlockEntityMixin",
+    "AbstractFurnaceBlockEntityMixin"
   ],
   "client": [
   ],
