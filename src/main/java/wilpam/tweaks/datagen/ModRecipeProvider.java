@@ -4,11 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
@@ -84,6 +80,21 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                                 ModItems.CHEESE, 0.25f, 200)
                         .unlockedBy("has_milk", has(Items.MILK_BUCKET))
                         .save(output, "cook_milk");
+
+                SimpleCookingRecipeBuilder.smelting(
+                                Ingredient.of(Items.COAL), RecipeCategory.MISC, CookingBookCategory.MISC,
+                                ModItems.OIL, 1f, 200)
+                        .unlockedBy("has_coal", has(Items.COAL))
+                        .save(output, "cook_coal");
+
+                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, Items.LEATHER, 3)
+                        .pattern("aaa")
+                        .pattern("bbb")
+                        .pattern("aaa")
+                        .define('a', Items.PAPER)
+                        .define('b', ModItems.OIL)
+                        .unlockedBy("has_paper", has(Items.PAPER))
+                        .save(output, "synthetic_leather");
             }
         };
     }
