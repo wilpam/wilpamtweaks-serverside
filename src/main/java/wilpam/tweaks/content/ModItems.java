@@ -1,5 +1,6 @@
 package wilpam.tweaks.content;
 
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -22,6 +23,7 @@ public final class ModItems {
     public static final Identifier WILPAM_ICON_ID = Identifier.fromNamespaceAndPath(ID, "wilpam_icon");
     public static final Identifier SLIMEBALL_SUBSTRATE_ID = Identifier.fromNamespaceAndPath(ID, "slimeball_substrate");
     public static final Identifier CHEESE_ID = Identifier.fromNamespaceAndPath(ID, "cheese");
+    public static final Identifier OIL_ID = Identifier.fromNamespaceAndPath(ID, "oil");
 
     public static final BasicPolymerItem DOUGH = new BasicPolymerItem(
             new Item.Properties().food(
@@ -51,6 +53,11 @@ public final class ModItems {
             Identifier.fromNamespaceAndPath(ID, "-/item/cheese"),
             Items.MILK_BUCKET);
 
+    public static final BasicPolymerItem OIL = new BasicPolymerItem(
+            new Item.Properties().setId(ResourceKey.create(Registries.ITEM, OIL_ID)),
+            Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
+            Items.DRAGON_BREATH);
+
     public static final BasicPolymerItem WILPAM_ICON = new BasicPolymerItem(
             new Item.Properties().setId(ResourceKey.create(Registries.ITEM, WILPAM_ICON_ID)),
             Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
@@ -64,5 +71,7 @@ public final class ModItems {
         Registry.register(BuiltInRegistries.ITEM, SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
         Registry.register(BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
         Registry.register(BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
+        Registry.register(BuiltInRegistries.ITEM, OIL_ID, OIL);
+        FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL, 200 * 12));
     }
 }

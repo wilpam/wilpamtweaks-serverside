@@ -18,6 +18,7 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.wilpam_tweaks.dough", "Dough");
         translationBuilder.add("item.wilpam_tweaks.cheese", "Cheese");
         translationBuilder.add("item.wilpam_tweaks.slimeball_substrate", "Slimeball Substrate");
+        translationBuilder.add("item.wilpam_tweaks.oil", "Crude Oil");
 
         translationBuilder.add("advancements.wilpam_tweaks.root.title", "Wilpam Tweaks");
         translationBuilder.add("advancements.wilpam_tweaks.root.description", "new WilpamTweaks()");
