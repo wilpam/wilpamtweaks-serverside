@@ -25,5 +25,8 @@ hs_err_pid*
 # Common working directory
 run
 
-# Exaroton API token (local, never commit)
+# Exaroton API token
 exaroton.properties
+
+# Generated sources
+src/main/generated/.cache
