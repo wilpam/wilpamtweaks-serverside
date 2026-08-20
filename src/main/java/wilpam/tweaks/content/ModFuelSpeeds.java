@@ -28,6 +28,6 @@ public final class ModFuelSpeeds {
     }
 
     public static void initialize() {
-        register(ModItems.OIL, 2);
+        register(ModItems.OIL.item(), 2);
     }
 }
