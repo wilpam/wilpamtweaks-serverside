@@ -2,6 +2,7 @@ package wilpam.tweaks.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -75,9 +76,9 @@ public class StampRecipe extends CustomRecipe {
         }
         ItemStack stamped_item = other.copyWithCount(1);
         String playerName = ((CraftingInputMixinInterface) craftingInput).getPlayerName();
-        if (playerName != null) {
-            stamped_item.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(playerName))));
-        }
+        Component stamp_text = Component.translatable("item.wilpam_tweaks.stamp.signature", Component.literal(playerName))
+                .withStyle(ChatFormatting.RED);
+        stamped_item.set(DataComponents.LORE, new ItemLore(List.of(stamp_text)));
         return stamped_item;
     }
 

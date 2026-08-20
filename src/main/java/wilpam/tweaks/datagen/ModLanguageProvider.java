@@ -20,6 +20,8 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("item.wilpam_tweaks.cheese", "Cheese");
         translationBuilder.add("item.wilpam_tweaks.slimeball_substrate", "Slimeball Substrate");
         translationBuilder.add("item.wilpam_tweaks.oil", "Crude Oil");
+        translationBuilder.add("item.wilpam_tweaks.stamp", "Stamp");
+        translationBuilder.add("item.wilpam_tweaks.stamp.signature", "Stamped by %s");
 
         translationBuilder.add("advancements.wilpam_tweaks.root.title", "Wilpam Tweaks");
         translationBuilder.add("advancements.wilpam_tweaks.root.description", "new WilpamTweaks()");
@@ -27,8 +29,12 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add("advancements.wilpam_tweaks.flint_block.description", "Put some flint together to craft a Flint Block");
         translationBuilder.add("advancements.wilpam_tweaks.slimeball.title", "Real Slimeballs Not Clickbait");
         translationBuilder.add("advancements.wilpam_tweaks.slimeball.description", "Smelt Slimeball Substrate into a Slimeball");
-        translationBuilder.add("advancements.wilpam_tweaks.cheese.title", "Stop Being So Cheesy");
         translationBuilder.add("advancements.wilpam_tweaks.cheese.description", "Smoke a Milk Bucket into Cheese");
+        translationBuilder.add("advancements.wilpam_tweaks.cheese.title", "Stop Being So Cheesy");
+        translationBuilder.add("advancements.wilpam_tweaks.stamp.description", "Use a Stamp to stamp your name onto an item");
+        translationBuilder.add("advancements.wilpam_tweaks.stamp.title", "Signature Move");
+        translationBuilder.add("advancements.wilpam_tweaks.oil.title", "Liberation Time");
+        translationBuilder.add("advancements.wilpam_tweaks.oil.description", "Smelt some Crude Oil");
     }
 
     @Override

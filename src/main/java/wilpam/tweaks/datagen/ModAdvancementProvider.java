@@ -87,6 +87,40 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("obtain_cheese",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CHEESE.item()))
                 .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/cheese"));
+
+        Advancement.Builder.advancement()
+                .parent(root)
+                .display(
+                        ModItems.STAMP.item(),
+                        Component.translatable("advancements.wilpam_tweaks.stamp.title"),
+                        Component.translatable("advancements.wilpam_tweaks.stamp.description"),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false)
+                .addCriterion("stamp_item",
+                        RecipeCraftedTrigger.TriggerInstance.craftedItem(
+                                ResourceKey.create(Registries.RECIPE,
+                                        Identifier.fromNamespaceAndPath(ModBlocks.ID, "stamping"))))
+                .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/stamp"));
+
+        Advancement.Builder.advancement()
+                .parent(root)
+                .display(
+                        ModItems.OIL.item(),
+                        Component.translatable("advancements.wilpam_tweaks.oil.title"),
+                        Component.translatable("advancements.wilpam_tweaks.oil.description"),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false)
+                .addCriterion("make_oil",
+                        RecipeCraftedTrigger.TriggerInstance.craftedItem(
+                                ResourceKey.create(Registries.RECIPE,
+                                        Identifier.fromNamespaceAndPath(ModBlocks.ID, "cook_coal"))))
+                .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/oil"));
     }
 
     @Override

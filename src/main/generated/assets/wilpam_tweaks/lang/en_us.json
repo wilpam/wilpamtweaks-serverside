@@ -3,14 +3,20 @@
   "advancements.wilpam_tweaks.cheese.title": "Stop Being So Cheesy",
   "advancements.wilpam_tweaks.flint_block.description": "Put some flint together to craft a Flint Block",
   "advancements.wilpam_tweaks.flint_block.title": "We Didn't Start the Fire",
+  "advancements.wilpam_tweaks.oil.description": "Smelt some Oil",
+  "advancements.wilpam_tweaks.oil.title": "Liberation Time",
   "advancements.wilpam_tweaks.root.description": "new WilpamTweaks()",
   "advancements.wilpam_tweaks.root.title": "Wilpam Tweaks",
   "advancements.wilpam_tweaks.slimeball.description": "Smelt Slimeball Substrate into a Slimeball",
   "advancements.wilpam_tweaks.slimeball.title": "Real Slimeballs Not Clickbait",
+  "advancements.wilpam_tweaks.stamp.description": "Use a Stamp to stamp your name onto an item",
+  "advancements.wilpam_tweaks.stamp.title": "Signature Move",
   "block.wilpam_tweaks.flint_block": "Flint Block",
   "item.wilpam_tweaks.cheese": "Cheese",
   "item.wilpam_tweaks.dough": "Dough",
   "item.wilpam_tweaks.flint_block": "Flint Block",
   "item.wilpam_tweaks.oil": "Crude Oil",
-  "item.wilpam_tweaks.slimeball_substrate": "Slimeball Substrate"
+  "item.wilpam_tweaks.slimeball_substrate": "Slimeball Substrate",
+  "item.wilpam_tweaks.stamp": "Stamp",
+  "item.wilpam_tweaks.stamp.signature": "Stamped by %s"
 }
