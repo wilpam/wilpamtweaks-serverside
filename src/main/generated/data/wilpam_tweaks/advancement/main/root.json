@@ -11,7 +11,7 @@
       "translate": "advancements.wilpam_tweaks.root.description"
     },
     "icon": {
-      "id": "wilpam_tweaks:-/item/wilpam_icon"
+      "id": "wilpam_tweaks:wilpam_icon"
     },
     "show_toast": false,
     "title": {

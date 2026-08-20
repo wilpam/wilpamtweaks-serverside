@@ -1,33 +1,35 @@
 package wilpam.tweaks.content;
 
-import net.minecraft.world.item.Item;
+import com.mojang.serialization.Codec;
+import eu.pb4.polymer.core.api.other.PolymerComponent;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Per-item smelting speed multipliers, consumed by {@code AbstractFurnaceBlockEntityMixin}.
  */
 public final class ModFuelSpeeds {
-    private static final Map<Item, Double> SPEEDS = new HashMap<>();
+    public static final DataComponentType<Double> FUEL_SPEED;
+
+    static {
+        FUEL_SPEED = Registry.register(
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                Identifier.fromNamespaceAndPath("wilpam_tweaks", "fuel_speed"),
+                DataComponentType.<Double>builder().persistent(Codec.DOUBLE).build());
+        PolymerComponent.registerDataComponent(FUEL_SPEED);
+    }
 
     private ModFuelSpeeds() {
     }
 
-    /**
-     * Registers a speed multiplier for a fuel. {@code speed > 1} smelts faster,
-     * {@code 0 < speed < 1} smelts slower.
-     */
-    public static void register(Item fuel, double speed) {
-        SPEEDS.put(fuel, speed);
-    }
-
     public static double speedOf(ItemStack fuel) {
-        return fuel.isEmpty() ? 1.0 : SPEEDS.getOrDefault(fuel.getItem(), 1.0);
-    }
-
-    public static void initialize() {
-        register(ModItems.OIL.item(), 2);
+        if (fuel.isEmpty()) {
+            return 1.0;
+        }
+        Double speed = fuel.get(FUEL_SPEED);
+        return (speed == null) ? 1.0 : speed;
     }
 }

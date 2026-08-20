@@ -64,7 +64,8 @@ public final class ModItems {
 
     public static final ItemEntry<BasicPolymerItem> OIL = ItemEntry.createBasicItemOf(
             Identifier.fromNamespaceAndPath(ID, "oil"),
-            Items.DRAGON_BREATH);
+            Items.DRAGON_BREATH,
+            new Item.Properties().component(ModFuelSpeeds.FUEL_SPEED, 2.0));
 
     public static final ItemEntry<BasicPolymerItem> STAMP = ItemEntry.createBasicItemOf(
             Identifier.fromNamespaceAndPath(ID, "stamp"),
