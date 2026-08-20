@@ -63,15 +63,15 @@ public final class ModItems {
             ));
 
     public static final ItemEntry<BasicPolymerItem> OIL = ItemEntry.createBasicItemOf(
-            Identifier.fromNamespaceAndPath(ID, "-/item/oil"),
+            Identifier.fromNamespaceAndPath(ID, "oil"),
             Items.DRAGON_BREATH);
 
     public static final ItemEntry<BasicPolymerItem> STAMP = ItemEntry.createBasicItemOf(
-            Identifier.fromNamespaceAndPath(ID, "-/item/stamp"),
+            Identifier.fromNamespaceAndPath(ID, "stamp"),
             Items.CLOCK);
 
     public static final ItemEntry<BasicPolymerItem> WILPAM_ICON = ItemEntry.createBasicItemOf(
-            Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
+            Identifier.fromNamespaceAndPath(ID, "wilpam_icon"),
             Items.FIREWORK_STAR);
 
     private ModItems() {
