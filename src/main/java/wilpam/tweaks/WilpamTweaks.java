@@ -8,6 +8,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import wilpam.tweaks.content.ModBlocks;
+import wilpam.tweaks.content.ModCustomRecipes;
 import wilpam.tweaks.content.ModItems;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class WilpamTweaks implements ModInitializer {
     public void onInitialize() {
         ModBlocks.register();
         ModItems.register();
+        ModCustomRecipes.initialize();
 
         ensureAutoHostEnabled();
 

@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "PistonMovingBlockEntityMixin",
-    "AbstractFurnaceBlockEntityMixin"
+    "AbstractFurnaceBlockEntityMixin",
+    "CraftingInputMixin",
+    "CraftingMenuMixin"
   ],
   "client": [
   ],

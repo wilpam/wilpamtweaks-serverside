@@ -24,6 +24,7 @@ public final class ModItems {
     public static final Identifier SLIMEBALL_SUBSTRATE_ID = Identifier.fromNamespaceAndPath(ID, "slimeball_substrate");
     public static final Identifier CHEESE_ID = Identifier.fromNamespaceAndPath(ID, "cheese");
     public static final Identifier OIL_ID = Identifier.fromNamespaceAndPath(ID, "oil");
+    public static final Identifier STAMP_ID = Identifier.fromNamespaceAndPath(ID, "stamp");
 
     public static final BasicPolymerItem DOUGH = new BasicPolymerItem(
             new Item.Properties().food(
@@ -58,6 +59,11 @@ public final class ModItems {
             Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
             Items.DRAGON_BREATH);
 
+    public static final BasicPolymerItem STAMP = new BasicPolymerItem(
+            new Item.Properties().setId(ResourceKey.create(Registries.ITEM, STAMP_ID)),
+            Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
+            Items.CLOCK);
+
     public static final BasicPolymerItem WILPAM_ICON = new BasicPolymerItem(
             new Item.Properties().setId(ResourceKey.create(Registries.ITEM, WILPAM_ICON_ID)),
             Identifier.fromNamespaceAndPath(ID, "-/item/wilpam_icon"),
@@ -72,6 +78,7 @@ public final class ModItems {
         Registry.register(BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
         Registry.register(BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
         Registry.register(BuiltInRegistries.ITEM, OIL_ID, OIL);
+        Registry.register(BuiltInRegistries.ITEM, STAMP_ID, STAMP);
         FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL, 200 * 12));
     }
 }

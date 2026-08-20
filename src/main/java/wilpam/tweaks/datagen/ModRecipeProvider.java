@@ -11,6 +11,8 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
+import wilpam.tweaks.content.ModRecipes;
+import wilpam.tweaks.recipe.StampRecipe;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -95,6 +97,17 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .define('b', ModItems.OIL)
                         .unlockedBy("has_paper", has(Items.PAPER))
                         .save(output, "synthetic_leather");
+
+                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, ModItems.STAMP)
+                        .pattern("aa")
+                        .pattern("bb")
+                        .define('a', Items.DYE.red())
+                        .define('b', ItemTags.PLANKS)
+                        .unlockedBy("has_red_dye", has(Items.DYE.red()))
+                        .save(output, "stamp");
+
+                SpecialRecipeBuilder.special(() -> new StampRecipe(Ingredient.of(ModItems.STAMP)))
+                        .save(output, "stamping");
             }
         };
     }
