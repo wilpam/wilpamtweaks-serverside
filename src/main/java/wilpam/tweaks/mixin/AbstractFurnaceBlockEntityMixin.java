@@ -47,7 +47,7 @@ public abstract class AbstractFurnaceBlockEntityMixin {
             target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;burn(Lnet/minecraft/core/NonNullList;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V"))
     private static void wilpamTweaks$returnCraftingRemainder(NonNullList<ItemStack> items, ItemStack input,
                                                              ItemStack result, Operation<Void> original,
-                                                             @Local RecipeHolder<?> recipe) {
+                                                             @Local(name = "recipe") RecipeHolder<?> recipe) {
         // The input's crafting remainder must be read before burn() consumes it, since
         // once the stack is empty its item resolves to AIR (no remainder).
         ItemStackTemplate remainder = ModRecipes.RETURNS_REMAINDER.contains(recipe.id())
@@ -61,15 +61,14 @@ public abstract class AbstractFurnaceBlockEntityMixin {
         }
     }
 
-    // A fuel only starts burning once consumeFuel runs, so that is the single
-    // point where the speed multiplier takes effect. Reading the fuel's speed
-    // here (before it is consumed) also keeps the multiplier for the fuel's whole
-    // burn, including the very last item in a stack.
+    // A fuel only starts burning once consumeFuel runs, so that is the
+    // point where the speed multiplier should take effect. Reading the fuel's speed
+    // here (before it is consumed) keeps the multiplier for the fuel's whole burn.
     @WrapOperation(method = "serverTick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;consumeFuel(Lnet/minecraft/core/NonNullList;Lnet/minecraft/world/item/ItemStack;)V"))
     private static void wilpamTweaks$updateSpeedOnFuelUse(NonNullList<ItemStack> items, ItemStack fuel,
                                                           Operation<Void> original,
-                                                          @Local(argsOnly = true) AbstractFurnaceBlockEntity entity) {
+                                                          @Local(argsOnly = true, name = "entity") AbstractFurnaceBlockEntity entity) {
         wilpamTweaks$setSpeed(entity, ModFuelSpeeds.speedOf(fuel));
         original.call(items, fuel);
     }
@@ -79,7 +78,7 @@ public abstract class AbstractFurnaceBlockEntityMixin {
     @WrapOperation(method = "serverTick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/crafting/AbstractCookingRecipe;cookingTime()I"))
     private static int wilpamTweaks$scaleCookingTotalTime(AbstractCookingRecipe recipe, Operation<Integer> original,
-                                                          @Local(argsOnly = true) AbstractFurnaceBlockEntity entity) {
+                                                          @Local(argsOnly = true, name = "entity") AbstractFurnaceBlockEntity entity) {
         AbstractFurnaceBlockEntityMixin self = wilpamTweaks$self(entity);
         int vanillaTime = original.call(recipe);
         self.wilpamTweaks$baseCookTotalTime = vanillaTime;
@@ -89,7 +88,7 @@ public abstract class AbstractFurnaceBlockEntityMixin {
     // Same as previous
     @ModifyReturnValue(method = "getTotalCookTime", at = @At("RETURN"))
     private static int wilpamTweaks$scaleInitialCookTotalTime(int original,
-                                                              @Local(argsOnly = true) AbstractFurnaceBlockEntity entity) {
+                                                              @Local(argsOnly = true, name = "entity") AbstractFurnaceBlockEntity entity) {
         AbstractFurnaceBlockEntityMixin self = wilpamTweaks$self(entity);
         self.wilpamTweaks$baseCookTotalTime = original;
         return scaledTotalTime(original, self.wilpamTweaks$speed);

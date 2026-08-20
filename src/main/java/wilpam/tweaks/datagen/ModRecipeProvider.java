@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
+import wilpam.tweaks.recipe.LootCookingRecipe.LootResult;
 import wilpam.tweaks.recipe.StampRecipe;
 
 import java.util.concurrent.CompletableFuture;
@@ -45,6 +46,20 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .requires(Items.WATER_BUCKET)
                         .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                         .save(output, "slimeball_substrate_leaves");
+
+                LootCookingRecipeBuilder.smelting(
+                                Ingredient.of(Items.APPLE), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                                ModRandomLootTableProvider.BAKED_APPLE,
+                                java.util.List.of(
+                                        LootResult.of(Items.APPLE, 10),
+                                        LootResult.of(Items.SUGAR, 4),
+                                        LootResult.of(Items.COOKIE, 2),
+                                        LootResult.of(Items.GOLDEN_APPLE, 1)
+                                ),
+                                0.2f, 200)
+                        .resultName("recipe.wilpam_tweaks.baked_apple_mystery_result")
+                        .unlockedBy("has_apple", has(Items.APPLE))
+                        .save(output, "wilpam_tweaks:baked_apple_mystery");
 
                 ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
                         .requires(ModItems.DOUGH.item())

@@ -5,11 +5,13 @@ import com.google.gson.JsonObject;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModCustomRecipes;
 import wilpam.tweaks.content.ModItems;
+import wilpam.tweaks.util.ServerHolder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +25,10 @@ public class WilpamTweaks implements ModInitializer {
         ModBlocks.register();
         ModItems.register();
         ModCustomRecipes.initialize();
+
+        // Put the server in an accessible placefffff
+        ServerLifecycleEvents.SERVER_STARTING.register(ServerHolder::setServer);
+        ServerLifecycleEvents.SERVER_STOPPED.register(ignored -> ServerHolder.setServer(null));
 
         ensureAutoHostEnabled();
 
