@@ -6,6 +6,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
 
@@ -16,35 +17,29 @@ import java.util.concurrent.CompletableFuture;
 
 public final class ModModelProvider implements DataProvider {
     private final FabricPackOutput output;
+    private PackOutput.PathProvider blockPaths;
+    private PackOutput.PathProvider itemPaths;
+    private CachedOutput cachedOutput;
+    List<CompletableFuture<?>> futures = new ArrayList<>();
 
     public ModModelProvider(FabricPackOutput output) {
         this.output = output;
+
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput cachedOutput) {
-        PackOutput.PathProvider blockPaths = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models/block");
-        PackOutput.PathProvider itemPaths = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models/item");
+    public @NonNull CompletableFuture<?> run(@NonNull CachedOutput cachedOutput) {
+        this.cachedOutput = cachedOutput;
+        blockPaths = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models/block");
+        itemPaths = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models/item");
 
-        List<CompletableFuture<?>> futures = new ArrayList<>();
+        makeCubeBlockAndItemModelOf(ModBlocks.FLINT_BLOCK_ID);
 
-        Path blockModel = blockPaths.json(ModBlocks.FLINT_BLOCK_ID);
-        futures.add(DataProvider.saveStable(cachedOutput, cubeAll("wilpam_tweaks:block/flint_block"), blockModel));
-
-        Path doughModel = itemPaths.json(ModItems.DOUGH_ID);
-        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/dough"), doughModel));
-
-        Path flintBlockItemModel = itemPaths.json(ModBlocks.FLINT_BLOCK_ID);
-        futures.add(DataProvider.saveStable(cachedOutput, parentOnly("wilpam_tweaks:block/flint_block"), flintBlockItemModel));
-
-        Path substrateModel = itemPaths.json(ModItems.SLIMEBALL_SUBSTRATE_ID);
-        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/slimeball_substrate"), substrateModel));
-
-        Path cheeseModel = itemPaths.json(ModItems.CHEESE_ID);
-        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/cheese"), cheeseModel));
-
-        Path iconModel = itemPaths.json(Identifier.fromNamespaceAndPath(ModBlocks.ID, "wilpam_icon"));
-        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/wilpam_icon"), iconModel));
+        makeItemModelOf(ModItems.CHEESE_ID);
+        makeItemModelOf(ModItems.DOUGH_ID);
+        makeItemModelOf(ModItems.OIL_ID);
+        makeItemModelOf(ModItems.STAMP_ID);
+        makeItemModelOf(ModItems.SLIMEBALL_SUBSTRATE_ID);
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
     }
@@ -73,8 +68,21 @@ public final class ModModelProvider implements DataProvider {
         return json;
     }
 
+    private void makeItemModelOf(Identifier id) {
+        Path modelPath = itemPaths.json(id);
+        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/" + id.getPath()), modelPath));
+    }
+
+    private void makeCubeBlockAndItemModelOf(@SuppressWarnings("SameParameterValue") Identifier id) {
+        Path blockModel = blockPaths.json(id);
+        futures.add(DataProvider.saveStable(cachedOutput, cubeAll("wilpam_tweaks:block/" + id.getPath()), blockModel));
+
+        Path blockItemModel = itemPaths.json(id);
+        futures.add(DataProvider.saveStable(cachedOutput, parentOnly("wilpam_tweaks:block/" + id.getPath()), blockItemModel));
+    }
+
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mod Models";
     }
 }

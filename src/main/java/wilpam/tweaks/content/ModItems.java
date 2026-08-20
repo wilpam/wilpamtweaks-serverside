@@ -73,12 +73,16 @@ public final class ModItems {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.ITEM, DOUGH_ID, DOUGH);
-        Registry.register(BuiltInRegistries.ITEM, SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
-        Registry.register(BuiltInRegistries.ITEM, WILPAM_ICON_ID, WILPAM_ICON);
-        Registry.register(BuiltInRegistries.ITEM, CHEESE_ID, CHEESE);
-        Registry.register(BuiltInRegistries.ITEM, OIL_ID, OIL);
-        Registry.register(BuiltInRegistries.ITEM, STAMP_ID, STAMP);
+        registerSingle(DOUGH_ID, DOUGH);
+        registerSingle(SLIMEBALL_SUBSTRATE_ID, SLIMEBALL_SUBSTRATE);
+        registerSingle(WILPAM_ICON_ID, WILPAM_ICON);
+        registerSingle(CHEESE_ID, CHEESE);
+        registerSingle(OIL_ID, OIL);
+        registerSingle(STAMP_ID, STAMP);
         FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL, 200 * 12));
+    }
+
+    public static void registerSingle(Identifier id, Item item) {
+        Registry.register(BuiltInRegistries.ITEM, id, item);
     }
 }

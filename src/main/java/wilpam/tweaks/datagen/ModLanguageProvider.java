@@ -3,6 +3,7 @@ package wilpam.tweaks.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -12,7 +13,7 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
     }
 
     @Override
-    public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
+    public void generateTranslations(HolderLookup.@NonNull Provider registryLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add("block.wilpam_tweaks.flint_block", "Flint Block");
         translationBuilder.add("item.wilpam_tweaks.flint_block", "Flint Block");
         translationBuilder.add("item.wilpam_tweaks.dough", "Dough");
@@ -31,7 +32,7 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mod Language";
     }
 }

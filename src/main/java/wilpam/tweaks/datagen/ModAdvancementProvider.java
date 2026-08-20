@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
+import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
 
@@ -26,7 +27,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
     }
 
     @Override
-    public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+    public void generateAdvancement(HolderLookup.@NonNull Provider registryLookup, @NonNull Consumer<AdvancementHolder> consumer) {
         AdvancementHolder root = Advancement.Builder.advancement()
                 .display(
                         ModItems.WILPAM_ICON,
@@ -89,7 +90,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mod Advancements";
     }
 }

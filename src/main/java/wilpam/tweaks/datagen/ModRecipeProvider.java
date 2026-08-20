@@ -9,9 +9,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
-import wilpam.tweaks.content.ModRecipes;
 import wilpam.tweaks.recipe.StampRecipe;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +22,7 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+    protected @NonNull RecipeProvider createRecipeProvider(HolderLookup.@NonNull Provider registries, @NonNull RecipeOutput output) {
         return new RecipeProvider(registries, output) {
             @Override
             public void buildRecipes() {
@@ -113,7 +113,7 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mod Recipes";
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.block.FlintBlock;
 import wilpam.tweaks.content.ModBlocks;
 
@@ -18,7 +19,7 @@ public final class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProv
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider wrapperLookup) {
+    protected void addTags(HolderLookup.@NonNull Provider wrapperLookup) {
         builder(FlintBlock.FLINT_METALS)
                 .add(key(Blocks.IRON_BLOCK), key(Blocks.RAW_IRON_BLOCK), key(Blocks.IRON_BARS), key(Blocks.IRON_DOOR),
                         key(Blocks.IRON_TRAPDOOR), key(Blocks.CAULDRON), key(Blocks.IRON_CHAIN), key(Blocks.HOPPER),
@@ -29,11 +30,12 @@ public final class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProv
     }
 
     private static ResourceKey<Block> key(Block block) {
+        //noinspection deprecation
         return block.builtInRegistryHolder().key();
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mod Block Tags";
     }
 }
