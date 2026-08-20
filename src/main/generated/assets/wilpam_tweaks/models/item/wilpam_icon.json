@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "wilpam_tweaks:item/wilpam_icon"
-  }
-}

@@ -35,11 +35,12 @@ public final class ModModelProvider implements DataProvider {
 
         makeCubeBlockAndItemModelOf(ModBlocks.FLINT_BLOCK_ID);
 
-        makeItemModelOf(ModItems.CHEESE_ID);
-        makeItemModelOf(ModItems.DOUGH_ID);
-        makeItemModelOf(ModItems.OIL_ID);
-        makeItemModelOf(ModItems.STAMP_ID);
-        makeItemModelOf(ModItems.SLIMEBALL_SUBSTRATE_ID);
+        makeItemModelOf(ModItems.CHEESE);
+        makeItemModelOf(ModItems.DOUGH);
+        makeItemModelOf(ModItems.OIL);
+        makeItemModelOf(ModItems.STAMP);
+        makeItemModelOf(ModItems.SLIMEBALL_SUBSTRATE);
+        makeItemModelOf(ModItems.WILPAM_ICON);
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
     }
@@ -68,9 +69,9 @@ public final class ModModelProvider implements DataProvider {
         return json;
     }
 
-    private void makeItemModelOf(Identifier id) {
-        Path modelPath = itemPaths.json(id);
-        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/" + id.getPath()), modelPath));
+    private void makeItemModelOf(ModItems.ItemEntry<?> entry) {
+        Path modelPath = itemPaths.json(entry.id());
+        futures.add(DataProvider.saveStable(cachedOutput, itemGenerated("wilpam_tweaks:item/" + entry.id().getPath()), modelPath));
     }
 
     private void makeCubeBlockAndItemModelOf(@SuppressWarnings("SameParameterValue") Identifier id) {

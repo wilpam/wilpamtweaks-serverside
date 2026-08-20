@@ -28,7 +28,7 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
             public void buildRecipes() {
                 var items = registries.lookupOrThrow(Registries.ITEM);
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.DOUGH)
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.DOUGH.item())
                         .requires(Items.WHEAT, 2)
                         .unlockedBy("has_wheat", has(Items.WHEAT))
                         .save(output, "dough_from_wheat");
@@ -38,54 +38,54 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy("has_flint", has(Items.FLINT))
                         .save(output, "flint_block");
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE)
-                        .requires(ModItems.DOUGH)
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
+                        .requires(ModItems.DOUGH.item())
                         .requires(ItemTags.LEAVES)
                         .requires(ItemTags.LEAVES)
                         .requires(Items.WATER_BUCKET)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH))
+                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                         .save(output, "slimeball_substrate_leaves");
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE)
-                        .requires(ModItems.DOUGH)
+                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
+                        .requires(ModItems.DOUGH.item())
                         .requires(Items.DYE.lime())
                         .requires(Items.WATER_BUCKET)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH))
+                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                         .save(output, "slimeball_substrate_dye");
 
                 SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(ModItems.DOUGH), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                                Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD, CookingBookCategory.FOOD,
                                 Items.BREAD, 0.25f, 200)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH))
+                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                         .save(output, "cook_dough");
 
                 SimpleCookingRecipeBuilder.smoking(
-                                Ingredient.of(ModItems.DOUGH), RecipeCategory.FOOD,
+                                Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD,
                                 Items.BREAD, 0.25f, 100)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH))
+                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                         .save(output, "smoke_dough");
 
                 SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(ModItems.SLIMEBALL_SUBSTRATE), RecipeCategory.MISC, CookingBookCategory.MISC,
+                                Ingredient.of(ModItems.SLIMEBALL_SUBSTRATE.item()), RecipeCategory.MISC, CookingBookCategory.MISC,
                                 Items.SLIME_BALL, 2f, 800)
-                        .unlockedBy("has_slimeball_substrate", has(ModItems.SLIMEBALL_SUBSTRATE))
+                        .unlockedBy("has_slimeball_substrate", has(ModItems.SLIMEBALL_SUBSTRATE.item()))
                         .save(output, "cook_slimeball");
 
                 SimpleCookingRecipeBuilder.smoking(
                                 Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD,
-                                ModItems.CHEESE, 0.25f, 100)
+                                ModItems.CHEESE.item(), 0.25f, 100)
                         .unlockedBy("has_milk", has(Items.MILK_BUCKET))
                         .save(output, "smoke_milk");
 
                 SimpleCookingRecipeBuilder.smelting(
                                 Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD, CookingBookCategory.FOOD,
-                                ModItems.CHEESE, 0.25f, 200)
+                                ModItems.CHEESE.item(), 0.25f, 200)
                         .unlockedBy("has_milk", has(Items.MILK_BUCKET))
                         .save(output, "cook_milk");
 
                 SimpleCookingRecipeBuilder.smelting(
                                 Ingredient.of(Items.COAL), RecipeCategory.MISC, CookingBookCategory.MISC,
-                                ModItems.OIL, 1f, 200)
+                                ModItems.OIL.item(), 1f, 200)
                         .unlockedBy("has_coal", has(Items.COAL))
                         .save(output, "cook_coal");
 
@@ -94,11 +94,11 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .pattern("bbb")
                         .pattern("aaa")
                         .define('a', Items.PAPER)
-                        .define('b', ModItems.OIL)
+                        .define('b', ModItems.OIL.item())
                         .unlockedBy("has_paper", has(Items.PAPER))
                         .save(output, "synthetic_leather");
 
-                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, ModItems.STAMP)
+                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, ModItems.STAMP.item())
                         .pattern("aa")
                         .pattern("bb")
                         .define('a', Items.DYE.red())
@@ -106,7 +106,7 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy("has_red_dye", has(Items.DYE.red()))
                         .save(output, "stamp");
 
-                SpecialRecipeBuilder.special(() -> new StampRecipe(Ingredient.of(ModItems.STAMP)))
+                SpecialRecipeBuilder.special(() -> new StampRecipe(Ingredient.of(ModItems.STAMP.item())))
                         .save(output, "stamping");
             }
         };

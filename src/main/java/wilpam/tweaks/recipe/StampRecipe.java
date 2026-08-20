@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModCustomRecipes;
 import wilpam.tweaks.content.ModItems;
 import wilpam.tweaks.mixin_helpers.CraftingInputMixinInterface;
@@ -35,7 +36,7 @@ public class StampRecipe extends CustomRecipe {
         this.stamp = stamp;
     }
 
-    public boolean matches(CraftingInput craftingInput, Level level) {
+    public boolean matches(CraftingInput craftingInput, @NonNull Level level) {
         if (craftingInput.ingredientCount() == 2) {
             ItemStack itemStack = null;
 
@@ -43,9 +44,9 @@ public class StampRecipe extends CustomRecipe {
                 ItemStack itemStack2 = craftingInput.getItem(i);
                 if (!itemStack2.isEmpty()) {
                     if (itemStack != null) {
-                        if (itemStack.getItem() == ModItems.STAMP && !(itemStack2.getItem() == ModItems.STAMP)) {
+                        if (itemStack.getItem() == ModItems.STAMP.item() && !(itemStack2.getItem() == ModItems.STAMP.item())) {
                             return true;
-                        } else if (itemStack2.getItem() == ModItems.STAMP) {
+                        } else if (itemStack2.getItem() == ModItems.STAMP.item()) {
                             return true;
                         }
                     }
@@ -57,13 +58,15 @@ public class StampRecipe extends CustomRecipe {
         return false;
     }
 
-    public ItemStack assemble(CraftingInput craftingInput) {
+    public @NonNull ItemStack assemble(CraftingInput craftingInput) {
+        //noinspection unused
         ItemStack stamp = ItemStack.EMPTY;
         ItemStack other = ItemStack.EMPTY;
         for (int i = 0; i < craftingInput.size(); i++) {
             ItemStack itemStack = craftingInput.getItem(i);
             if (!itemStack.isEmpty()) {
-                if (itemStack.getItem() == ModItems.STAMP) {
+                if (itemStack.getItem() == ModItems.STAMP.item()) {
+                    //noinspection UnusedAssignment
                     stamp = itemStack;
                 } else {
                     other = itemStack;
@@ -79,12 +82,12 @@ public class StampRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInput craftingInput) {
+    public @NonNull NonNullList<ItemStack> getRemainingItems(CraftingInput craftingInput) {
         NonNullList<ItemStack> nonNullList = NonNullList.withSize(craftingInput.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < nonNullList.size(); i++) {
             ItemStack itemStack = craftingInput.getItem(i);
-            if (itemStack.getItem() == ModItems.STAMP && !itemStack.nextDamageWillBreak()) {
+            if (itemStack.getItem() == ModItems.STAMP.item() && !itemStack.nextDamageWillBreak()) {
                 ItemStack copy = itemStack.copyWithCount(1);
                 copy.setDamageValue(itemStack.getDamageValue() + 1);
                 nonNullList.set(i, copy);
@@ -95,5 +98,5 @@ public class StampRecipe extends CustomRecipe {
     }
 
     @Override
-    public RecipeSerializer<StampRecipe> getSerializer() { return ModCustomRecipes.STAMP_RECIPE_SERIALIZER; }
+    public @NonNull RecipeSerializer<StampRecipe> getSerializer() { return ModCustomRecipes.STAMP_RECIPE_SERIALIZER; }
 }

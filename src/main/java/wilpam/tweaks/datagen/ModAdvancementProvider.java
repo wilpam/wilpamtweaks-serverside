@@ -30,7 +30,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
     public void generateAdvancement(HolderLookup.@NonNull Provider registryLookup, @NonNull Consumer<AdvancementHolder> consumer) {
         AdvancementHolder root = Advancement.Builder.advancement()
                 .display(
-                        ModItems.WILPAM_ICON,
+                        ModItems.WILPAM_ICON.item(),
                         Component.translatable("advancements.wilpam_tweaks.root.title"),
                         Component.translatable("advancements.wilpam_tweaks.root.description"),
                         Identifier.fromNamespaceAndPath(ModBlocks.ID, "block/flint_block"),
@@ -76,7 +76,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
         Advancement.Builder.advancement()
                 .parent(root)
                 .display(
-                        ModItems.CHEESE,
+                        ModItems.CHEESE.item(),
                         Component.translatable("advancements.wilpam_tweaks.cheese.title"),
                         Component.translatable("advancements.wilpam_tweaks.cheese.description"),
                         null,
@@ -85,7 +85,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false)
                 .addCriterion("obtain_cheese",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CHEESE))
+                        InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CHEESE.item()))
                 .save(consumer, Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/cheese"));
     }
 
