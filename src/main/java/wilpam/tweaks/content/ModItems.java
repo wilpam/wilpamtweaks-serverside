@@ -79,7 +79,7 @@ public final class ModItems {
         registerSingle(CHEESE_ID, CHEESE);
         registerSingle(OIL_ID, OIL);
         registerSingle(STAMP_ID, STAMP);
-        FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL, 200 * 12));
+        FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL, 200 * 8));
     }
 
     public static void registerSingle(Identifier id, Item item) {

@@ -26,4 +26,8 @@ public final class ModFuelSpeeds {
     public static double speedOf(ItemStack fuel) {
         return fuel.isEmpty() ? 1.0 : SPEEDS.getOrDefault(fuel.getItem(), 1.0);
     }
+
+    public static void initialize() {
+        register(ModItems.OIL, 2);
+    }
 }
