@@ -25,6 +25,7 @@ public final class ModLanguageProvider extends FabricLanguageProvider {
 
         translationBuilder.add("recipe.wilpam_tweaks.random_cook_result", "Any of:");
         translationBuilder.add("recipe.wilpam_tweaks.baked_apple_mystery_result", "Apple Distillation");
+        translationBuilder.add("recipe.wilpam_tweaks.random_cook.nothing", "No item");
 
         translationBuilder.add("advancements.wilpam_tweaks.root.title", "Wilpam Tweaks");
         translationBuilder.add("advancements.wilpam_tweaks.root.description", "new WilpamTweaks()");

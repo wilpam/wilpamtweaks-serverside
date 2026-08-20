@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -37,6 +38,7 @@ public final class ModRandomLootTableProvider extends SimpleFabricLootTableSubPr
                         .setRolls(ConstantValue.exactly(1.0f))
                         .add(LootItem.lootTableItem(Items.APPLE).setWeight(10))
                         .add(LootItem.lootTableItem(Items.SUGAR).setWeight(4))
+                        .add(EmptyLootItem.emptyItem().setWeight(3))
                         .add(LootItem.lootTableItem(Items.COOKIE).setWeight(2))
                         .add(LootItem.lootTableItem(Items.GOLDEN_APPLE).setWeight(1))));
     }

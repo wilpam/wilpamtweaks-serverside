@@ -55,18 +55,10 @@ public class LootCookingRecipe extends AbstractCookingRecipe {
     // Custom name shown on the recipe book's result preview, defined in the lang file.
     public static final String DEFAULT_RESULT_NAME_TRANSLATION_KEY = "recipe.wilpam_tweaks.random_cook_result";
 
-    private final RecipeType<? extends AbstractCookingRecipe> type;
+private final RecipeType<? extends AbstractCookingRecipe> type;
     private final ResourceKey<LootTable> lootTable;
     private final List<LootResult> results;
     private final String resultTranslationKey;
-
-    // The furnace calls assemble() on every tick with the same input ItemStack
-    // (identity = the furnace's inventory slot), and burn() shrinks it in place
-    // when a cook completes. Rolling randomly every tick results in smelts not finishing,
-    // so the roll is cached per input stack and only re-rolled when a new cook has begun.
-    // Weak identity so we don't leak anything.
-    private final java.util.concurrent.ConcurrentMap<ItemStack, ResultCache> rollCaches =
-            new com.google.common.collect.MapMaker().weakKeys().makeMap();
 
     public LootCookingRecipe(Recipe.CommonInfo commonInfo, CookingBookInfo bookInfo, Ingredient ingredient,
                              ResourceKey<LootTable> lootTable, List<LootResult> results,
@@ -137,22 +129,24 @@ public class LootCookingRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public @NonNull ItemStack assemble(SingleRecipeInput input) {
-        ItemStack in = input.item();
-        ResultCache cache = rollCaches.computeIfAbsent(in, ignored -> new ResultCache());
-        if (in.getCount() != cache.lastCount) {
-            cache.lastCount = in.getCount();
-            cache.roll = rollLoot();
-        }
-        return cache.roll;
+    public @NonNull ItemStack assemble(@NonNull SingleRecipeInput input) {
+        // The furnace intercepts this for loot recipes and caches the roll on the
+        // furnace itself (see AbstractFurnaceBlockEntityMixin), so a plain roll is
+        // enough here.
+        return rollResult();
     }
 
-    private static final class ResultCache {
-        int lastCount = -1;
-        ItemStack roll = ItemStack.EMPTY;
+    /**
+     * Rolls the loot table from a random seed.
+     */
+    public ItemStack rollResult() {
+        return rollResult(RandomSource.create().nextLong());
     }
 
-    private ItemStack rollLoot() {
+    /**
+     * Rolls the loot table from a seed combined with this recipe's identity.
+     */
+    public ItemStack rollResult(long seed) {
         MinecraftServer server = ServerHolder.getServer();
         if (server == null) {
             return ItemStack.EMPTY;
@@ -165,8 +159,13 @@ public class LootCookingRecipe extends AbstractCookingRecipe {
         if (table == LootTable.EMPTY) {
             return ItemStack.EMPTY;
         }
+
+        // Mix the recipe into the seed so different recipes give different rolls
+        // for the same furnace seed.
+        long recipeHash = lootTable.identifier().toString().hashCode();
+        long combined = seed * 0x9E3779B97F4A7C15L + recipeHash;
         LootParams params = new LootParams.Builder(level).create(table.getParamSet());
-        var stacks = table.getRandomItems(params, RandomSource.create());
+        var stacks = table.getRandomItems(params, RandomSource.create(combined));
         if (stacks.isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -213,11 +212,16 @@ public class LootCookingRecipe extends AbstractCookingRecipe {
         List<Component> lines = new ArrayList<>();
         for (LootResult r : results) {
             Item item = BuiltInRegistries.ITEM.getValue(r.item());
-            assert item != null;
             int count = r.weight();
             float percentage = count * 100f / totalWeight;
-            Component name = Component.translatable(item.getDescriptionId())
-                    .withStyle(style -> style.withColor(ChatFormatting.GRAY).withItalic(false));
+            Component name;
+            if (item == null || item == Items.AIR) {
+                name = Component.translatable("recipe.wilpam_tweaks.random_cook.nothing")
+                        .withStyle(style -> style.withColor(ChatFormatting.GRAY).withItalic(false));
+            } else {
+                name = Component.translatable(item.getDescriptionId())
+                        .withStyle(style -> style.withColor(ChatFormatting.GRAY).withItalic(false));
+            }
             Component pct = Component.literal(String.format(" (%.1f%%)", percentage))
                     .withStyle(style -> style.withColor(ChatFormatting.DARK_GRAY).withItalic(false));
             lines.add(name.copy().append(pct));

@@ -54,7 +54,8 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                                         LootResult.of(Items.APPLE, 10),
                                         LootResult.of(Items.SUGAR, 4),
                                         LootResult.of(Items.COOKIE, 2),
-                                        LootResult.of(Items.GOLDEN_APPLE, 1)
+                                        LootResult.of(Items.GOLDEN_APPLE, 1),
+                                        LootResult.of(Items.AIR, 3)
                                 ),
                                 0.2f, 200)
                         .resultName("recipe.wilpam_tweaks.baked_apple_mystery_result")
