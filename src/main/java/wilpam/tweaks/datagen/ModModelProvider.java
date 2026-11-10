@@ -40,7 +40,7 @@ public final class ModModelProvider implements DataProvider {
         makeItemModelOf(ModItems.OIL);
         makeItemModelOf(ModItems.STAMP);
         makeItemModelOf(ModItems.SLIMEBALL_SUBSTRATE);
-        makeItemModelOf(ModItems.WILPAM_ICON);
+        makeItemModelOf(ModItems.ICON);
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
     }
