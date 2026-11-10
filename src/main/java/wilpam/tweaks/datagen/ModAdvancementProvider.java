@@ -35,7 +35,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
         var recipes = registryLookup.lookupOrThrow(Registries.RECIPE);
         AdvancementHolder root = Advancement.Builder.advancement()
                 .rootDisplay(
-                        ModItems.WILPAM_ICON.item(),
+                        ModItems.ICON.item(),
                         Component.translatable("advancements.wilpam_tweaks.root.title"),
                         Component.translatable("advancements.wilpam_tweaks.root.description"),
                         Identifier.fromNamespaceAndPath(ModBlocks.ID, "block/flint_block"),

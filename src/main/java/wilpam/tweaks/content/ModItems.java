@@ -75,8 +75,8 @@ public final class ModItems {
             Identifier.fromNamespaceAndPath(ID, "stamp"),
             Items.CLOCK);
 
-    public static final ItemEntry<BasicPolymerItem> WILPAM_ICON = ItemEntry.createBasicItemOf(
-            Identifier.fromNamespaceAndPath(ID, "wilpam_icon"),
+    public static final ItemEntry<BasicPolymerItem> ICON = ItemEntry.createBasicItemOf(
+            Identifier.fromNamespaceAndPath(ID, "icon"),
             Items.FIREWORK_STAR);
 
     private ModItems() {
@@ -85,7 +85,7 @@ public final class ModItems {
     public static void register() {
         registerSingle(DOUGH);
         registerSingle(SLIMEBALL_SUBSTRATE);
-        registerSingle(WILPAM_ICON);
+        registerSingle(ICON);
         registerSingle(CHEESE);
         registerSingle(OIL);
         registerSingle(STAMP);
