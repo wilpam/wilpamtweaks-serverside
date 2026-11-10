@@ -2,13 +2,16 @@ package wilpam.tweaks.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.content.ModBlocks;
 import wilpam.tweaks.content.ModItems;
@@ -23,109 +26,122 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected @NonNull RecipeProvider createRecipeProvider(HolderLookup.@NonNull Provider registries, @NonNull RecipeOutput output) {
-        return new RecipeProvider(registries, output) {
-            @Override
-            public void buildRecipes() {
-                var items = registries.lookupOrThrow(Registries.ITEM);
+    protected @NonNull RecipeProvider createRecipeProvider(HolderLookup.@NonNull Provider registries,
+                                                            @NonNull BootstrapContext<Recipe<?>> recipes,
+                                                            @NonNull BootstrapContext<Advancement> advancements) {
+        return new Recipes(recipes, advancements);
+    }
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.DOUGH.item())
-                        .requires(Items.WHEAT, 2)
-                        .unlockedBy("has_wheat", has(Items.WHEAT))
-                        .save(output, "dough_from_wheat");
+    public static void bootstrap(BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
+        new Recipes(recipes, advancements).buildRecipes();
+    }
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.BUILDING_BLOCKS, ModBlocks.FLINT_BLOCK_ITEM)
-                        .requires(Items.FLINT, 9)
-                        .unlockedBy("has_flint", has(Items.FLINT))
-                        .save(output, "flint_block");
+    private static final class Recipes extends RecipeProvider {
+        private Recipes(BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
+            super(recipes, advancements);
+        }
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
-                        .requires(ModItems.DOUGH.item())
-                        .requires(ItemTags.LEAVES)
-                        .requires(ItemTags.LEAVES)
-                        .requires(Items.WATER_BUCKET)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
-                        .save(output, "slimeball_substrate_leaves");
+        @Override
+        public void buildRecipes() {
+            var items = output.lookup(Registries.ITEM);
 
-                LootCookingRecipeBuilder.smelting(
-                                Ingredient.of(Items.APPLE), RecipeCategory.FOOD, CookingBookCategory.FOOD,
-                                ModRandomLootTableProvider.BAKED_APPLE,
-                                java.util.List.of(
-                                        LootResult.of(Items.APPLE, 10),
-                                        LootResult.of(Items.SUGAR, 4),
-                                        LootResult.of(Items.COOKIE, 2),
-                                        LootResult.of(Items.GOLDEN_APPLE, 1),
-                                        LootResult.of(Items.AIR, 3)
-                                ),
-                                0.2f, 200)
-                        .resultName("recipe.wilpam_tweaks.baked_apple_mystery_result")
-                        .unlockedBy("has_apple", has(Items.APPLE))
-                        .save(output, "wilpam_tweaks:baked_apple_mystery");
+            ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.DOUGH.item())
+                    .requires(Items.WHEAT, 2)
+                    .unlockedBy("has_wheat", has(Items.WHEAT))
+                    .save(output, ModItems.ID + ":dough_from_wheat");
 
-                ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
-                        .requires(ModItems.DOUGH.item())
-                        .requires(Items.DYE.lime())
-                        .requires(Items.WATER_BUCKET)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
-                        .save(output, "slimeball_substrate_dye");
+            ShapelessRecipeBuilder.shapeless(items, RecipeCategory.BUILDING_BLOCKS, ModBlocks.FLINT_BLOCK_ITEM)
+                    .requires(Items.FLINT, 9)
+                    .unlockedBy("has_flint", has(Items.FLINT))
+                    .save(output);
 
-                SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD, CookingBookCategory.FOOD,
-                                Items.BREAD, 0.25f, 200)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
-                        .save(output, "cook_dough");
+            ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
+                    .requires(ModItems.DOUGH.item())
+                    .requires(ItemTags.LEAVES)
+                    .requires(ItemTags.LEAVES)
+                    .requires(Items.WATER_BUCKET)
+                    .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
+                    .save(output, ModItems.ID + ":slimeball_substrate_leaves");
 
-                SimpleCookingRecipeBuilder.smoking(
-                                Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD,
-                                Items.BREAD, 0.25f, 100)
-                        .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
-                        .save(output, "smoke_dough");
+            /*LootCookingRecipeBuilder.smelting(
+                            Ingredient.of(Items.APPLE), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                            ModRandomLootTableProvider.BAKED_APPLE,
+                            java.util.List.of(
+                                    LootResult.of(Items.APPLE, 10),
+                                    LootResult.of(Items.SUGAR, 4),
+                                    LootResult.of(Items.COOKIE, 2),
+                                    LootResult.of(Items.GOLDEN_APPLE, 1),
+                                    LootResult.of(Items.AIR, 3)
+                            ),
+                            0.2f, 200)
+                    .resultName("recipe.wilpam_tweaks.baked_apple_mystery_result")
+                    .unlockedBy("has_apple", has(Items.APPLE))
+                    .save(output, "wilpam_tweaks:baked_apple_mystery");*/
 
-                SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(ModItems.SLIMEBALL_SUBSTRATE.item()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                                Items.SLIME_BALL, 2f, 800)
-                        .unlockedBy("has_slimeball_substrate", has(ModItems.SLIMEBALL_SUBSTRATE.item()))
-                        .save(output, "cook_slimeball");
+            ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
+                    .requires(ModItems.DOUGH.item())
+                    .requires(Items.DYE.lime())
+                    .requires(Items.WATER_BUCKET)
+                    .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
+                    .save(output, ModItems.ID + ":slimeball_substrate_dye");
 
-                SimpleCookingRecipeBuilder.smoking(
-                                Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD,
-                                ModItems.CHEESE.item(), 0.25f, 100)
-                        .unlockedBy("has_milk", has(Items.MILK_BUCKET))
-                        .save(output, "smoke_milk");
+            SimpleCookingRecipeBuilder.smelting(
+                            Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                            Items.BREAD, 0.25f, 200)
+                    .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
+                    .save(output, ModItems.ID + ":cook_dough");
 
-                SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD, CookingBookCategory.FOOD,
-                                ModItems.CHEESE.item(), 0.25f, 200)
-                        .unlockedBy("has_milk", has(Items.MILK_BUCKET))
-                        .save(output, "cook_milk");
+            SimpleCookingRecipeBuilder.smoking(
+                            Ingredient.of(ModItems.DOUGH.item()), RecipeCategory.FOOD,
+                            Items.BREAD, 0.25f, 100)
+                    .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
+                    .save(output, ModItems.ID + ":smoke_dough");
 
-                SimpleCookingRecipeBuilder.smelting(
-                                Ingredient.of(Items.COAL), RecipeCategory.MISC, CookingBookCategory.MISC,
-                                ModItems.OIL.item(), 1f, 200)
-                        .unlockedBy("has_coal", has(Items.COAL))
-                        .save(output, "cook_coal");
+            SimpleCookingRecipeBuilder.smelting(
+                            Ingredient.of(ModItems.SLIMEBALL_SUBSTRATE.item()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                            Items.SLIME_BALL, 2f, 800)
+                    .unlockedBy("has_slimeball_substrate", has(ModItems.SLIMEBALL_SUBSTRATE.item()))
+                    .save(output, ModItems.ID + ":cook_slimeball");
 
-                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, Items.LEATHER, 3)
-                        .pattern("aaa")
-                        .pattern("bbb")
-                        .pattern("aaa")
-                        .define('a', Items.PAPER)
-                        .define('b', ModItems.OIL.item())
-                        .unlockedBy("has_paper", has(Items.PAPER))
-                        .save(output, "synthetic_leather");
+            SimpleCookingRecipeBuilder.smoking(
+                            Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD,
+                            ModItems.CHEESE.item(), 0.25f, 100)
+                    .unlockedBy("has_milk", has(Items.MILK_BUCKET))
+                    .save(output, ModItems.ID + ":smoke_milk");
 
-                ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, ModItems.STAMP.item())
-                        .pattern("aa")
-                        .pattern("bb")
-                        .define('a', Items.DYE.red())
-                        .define('b', ItemTags.PLANKS)
-                        .unlockedBy("has_red_dye", has(Items.DYE.red()))
-                        .save(output, "stamp");
+            SimpleCookingRecipeBuilder.smelting(
+                            Ingredient.of(Items.MILK_BUCKET), RecipeCategory.FOOD, CookingBookCategory.FOOD,
+                            ModItems.CHEESE.item(), 0.25f, 200)
+                    .unlockedBy("has_milk", has(Items.MILK_BUCKET))
+                    .save(output, ModItems.ID + ":cook_milk");
 
-                SpecialRecipeBuilder.special(() -> new StampRecipe(Ingredient.of(ModItems.STAMP.item())))
-                        .save(output, "stamping");
-            }
-        };
+            SimpleCookingRecipeBuilder.smelting(
+                            Ingredient.of(Items.COAL), RecipeCategory.MISC, CookingBookCategory.MISC,
+                            ModItems.OIL.item(), 1f, 200)
+                    .unlockedBy("has_coal", has(Items.COAL))
+                    .save(output, ModItems.ID + ":cook_coal");
+
+            ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, Items.LEATHER, 3)
+                    .pattern("aaa")
+                    .pattern("bbb")
+                    .pattern("aaa")
+                    .define('a', Items.PAPER)
+                    .define('b', ModItems.OIL.item())
+                    .unlockedBy("has_paper", has(Items.PAPER))
+                    .save(output, ModItems.ID + ":synthetic_leather");
+
+            ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, ModItems.STAMP.item())
+                    .pattern("aa")
+                    .pattern("bb")
+                    .define('a', Items.DYE.red())
+                    .define('b', ItemTags.PLANKS)
+                    .unlockedBy("has_red_dye", has(Items.DYE.red()))
+                    .save(output);
+
+            SpecialRecipeBuilder.special(() -> new StampRecipe(Ingredient.of(ModItems.STAMP.item())))
+                    .save(output, ModItems.ID + ":stamping");
+
+        }
     }
 
     @Override

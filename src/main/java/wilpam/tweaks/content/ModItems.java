@@ -1,6 +1,9 @@
 package wilpam.tweaks.content;
 
-import net.fabricmc.fabric.api.registry.FuelValueEvents;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CookingFuel;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -65,7 +68,8 @@ public final class ModItems {
     public static final ItemEntry<BasicPolymerItem> OIL = ItemEntry.createBasicItemOf(
             Identifier.fromNamespaceAndPath(ID, "oil"),
             Items.DRAGON_BREATH,
-            new Item.Properties().component(ModFuelSpeeds.FUEL_SPEED, 2.0));
+            new Item.Properties().component(DataComponents.COOKING_FUEL,
+                    new CookingFuel(new ResolvableInt.Constant(800), new ResolvableFloat.Constant(2.0f))));
 
     public static final ItemEntry<BasicPolymerItem> STAMP = ItemEntry.createBasicItemOf(
             Identifier.fromNamespaceAndPath(ID, "stamp"),
@@ -85,7 +89,6 @@ public final class ModItems {
         registerSingle(CHEESE);
         registerSingle(OIL);
         registerSingle(STAMP);
-        FuelValueEvents.BUILD.register((builder, _) -> builder.add(ModItems.OIL.item, 800));
     }
 
     public static void registerSingle(ItemEntry<?> entry) {

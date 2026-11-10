@@ -2,6 +2,7 @@ package wilpam.tweaks.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue;
 import org.jspecify.annotations.NonNull;
 import wilpam.tweaks.WilpamTweaks;
 
@@ -35,7 +36,7 @@ public final class ModRandomLootTableProvider extends SimpleFabricLootTableSubPr
         exporter.accept(BAKED_APPLE, LootTable.lootTable()
                 .setParamSet(LootContextParamSets.EMPTY)
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1.0f))
+                        .setRolls(Holder.direct(new ConstantValue(1)))
                         .add(LootItem.lootTableItem(Items.APPLE).setWeight(10))
                         .add(LootItem.lootTableItem(Items.SUGAR).setWeight(4))
                         .add(EmptyLootItem.emptyItem().setWeight(3))
