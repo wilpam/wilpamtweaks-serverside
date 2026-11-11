@@ -27,6 +27,7 @@ public final class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProv
                         key(Blocks.DAMAGED_ANVIL));
 
         builder(BlockTags.MINEABLE_WITH_PICKAXE).add(key(ModBlocks.FLINT_BLOCK));
+        builder(BlockTags.MINEABLE_WITH_HOE).add(key(ModBlocks.PLASTIC_BLOCK));
     }
 
     private static ResourceKey<Block> key(Block block) {

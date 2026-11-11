@@ -34,13 +34,9 @@ public final class ModModelProvider implements DataProvider {
         itemPaths = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models/item");
 
         makeCubeBlockAndItemModelOf(ModBlocks.FLINT_BLOCK_ID);
+        makeCubeBlockAndItemModelOf(ModBlocks.PLASTIC_BLOCK_ID);
 
-        makeItemModelOf(ModItems.CHEESE);
-        makeItemModelOf(ModItems.DOUGH);
-        makeItemModelOf(ModItems.OIL);
-        makeItemModelOf(ModItems.STAMP);
-        makeItemModelOf(ModItems.SLIMEBALL_SUBSTRATE);
-        makeItemModelOf(ModItems.ICON);
+        ModItems.ITEMS.forEach(this::makeItemModelOf);
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
     }

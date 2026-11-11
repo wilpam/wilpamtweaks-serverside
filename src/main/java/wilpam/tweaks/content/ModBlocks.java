@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.item.Item;
 import wilpam.tweaks.block.FlintBlock;
+import wilpam.tweaks.block.SimpleBlock;
 import wilpam.tweaks.block.SimpleBlockItem;
 
 public final class ModBlocks {
@@ -31,11 +32,28 @@ public final class ModBlocks {
             Items.TUFF,
             Identifier.fromNamespaceAndPath(ID, "-/item/flint_block"));
 
+    public static final Identifier PLASTIC_BLOCK_ID = Identifier.fromNamespaceAndPath(ID, "plastic_block");
+
+    public static final SimpleBlock PLASTIC_BLOCK = new SimpleBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(2.0F, 12.0F)
+                    .setId(ResourceKey.create(Registries.BLOCK, PLASTIC_BLOCK_ID)),
+            Identifier.fromNamespaceAndPath(ID, "block/plastic_block"));
+
+    public static final SimpleBlockItem PLASTIC_BLOCK_ITEM = new SimpleBlockItem(
+            PLASTIC_BLOCK,
+            new Item.Properties().setId(ResourceKey.create(Registries.ITEM, PLASTIC_BLOCK_ID)),
+            Items.HAY_BLOCK,
+            Identifier.fromNamespaceAndPath(ID, "-/item/plastic_block"));
+
     private ModBlocks() {
     }
 
     public static void register() {
         Registry.register(BuiltInRegistries.BLOCK, FLINT_BLOCK_ID, FLINT_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, FLINT_BLOCK_ID, FLINT_BLOCK_ITEM);
+        Registry.register(BuiltInRegistries.BLOCK, PLASTIC_BLOCK_ID, PLASTIC_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, PLASTIC_BLOCK_ID, PLASTIC_BLOCK_ITEM);
     }
 }

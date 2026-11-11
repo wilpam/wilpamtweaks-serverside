@@ -33,7 +33,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
     public void generateAdvancement(HolderLookup.@NonNull Provider registryLookup,
                                     @NonNull Consumer<AdvancementHolder> consumer) {
         var recipes = registryLookup.lookupOrThrow(Registries.RECIPE);
-        AdvancementHolder root = Advancement.Builder.advancement()
+        var root = Advancement.Builder.advancement()
                 .rootDisplay(
                         ModItems.ICON.item(),
                         Component.translatable("advancements.wilpam_tweaks.root.title"),
@@ -103,7 +103,7 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                         craftedRecipe(recipes, "stamping"))
                 .build(Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/stamp")));
 
-        consumer.accept(Advancement.Builder.advancement()
+        var oil = Advancement.Builder.advancement()
                 .parent(root)
                 .display(
                         ModItems.OIL.item(),
@@ -115,7 +115,37 @@ public final class ModAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .addCriterion("make_oil",
                         craftedRecipe(recipes, "cook_coal"))
-                .build(Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/oil")));
+                .build(Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/oil"));
+        consumer.accept(oil);
+
+
+        var distillation = Advancement.Builder.advancement()
+                .parent(oil)
+                .display(
+                        ModItems.OIL_WAX.item(),
+                        Component.translatable("advancements.wilpam_tweaks.oil_distillation.title"),
+                        Component.translatable("advancements.wilpam_tweaks.oil_distillation.description"),
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false)
+                .addCriterion("smelt_oil",
+                        craftedRecipe(recipes, "crude_oil_distillation"))
+                .build(Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/oil/distillation"));
+
+        consumer.accept(Advancement.Builder.advancement()
+                .parent(distillation)
+                .display(
+                        ModItems.PLASTIC_PLATE.item(),
+                        Component.translatable("advancements.wilpam_tweaks.plastic.title"),
+                        Component.translatable("advancements.wilpam_tweaks.plastic.description"),
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false)
+                .addCriterion("get_plastic",
+                        craftedRecipe(recipes, "cook_prepolymerized_plate"))
+                .build(Identifier.fromNamespaceAndPath(ModBlocks.ID, "main/oil/distillation/cook_prepolymerized_plate")));
     }
 
     @Override

@@ -15,5 +15,6 @@ public final class ModBlockLootTableProvider extends FabricBlockLootSubProvider 
     @Override
     public void generate() {
         this.dropSelf(ModBlocks.FLINT_BLOCK);
+        this.dropSelf(ModBlocks.PLASTIC_BLOCK);
     }
 }

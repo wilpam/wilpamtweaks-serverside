@@ -56,9 +56,241 @@ def exarotonModsDir() {
 // Resolves the fabric-api jar so it can be deployed alongside the mod.
 configurations {
     exarotonJars
+    exarotonRunner
 }
 dependencies {
     exarotonJars "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    exarotonRunner localGroovy()
+}
+
+// Generated under build/ when needed so the task has no separate source-file dependency.
+def exarotonTestServerSource = '''
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.time.Duration
+import java.util.concurrent.atomic.AtomicBoolean
+
+// REST endpoints: https://developers.exaroton.com/
+// The pinned Java API client does not support server creation/deletion yet.
+class ExarotonTestServer {
+    final URI baseUri
+    final String token
+    final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20)).build()
+    final AtomicBoolean stopping = new AtomicBoolean()
+    final Object lifecycleLock = new Object()
+    String serverId
+
+    ExarotonTestServer(String token, URI baseUri = URI.create('https://api.exaroton.com/v1/')) {
+        this.token = token
+        this.baseUri = baseUri
+    }
+
+    def request(String method, String path, Object body = null, String contentType = 'application/json') {
+        def publisher = body instanceof File ? HttpRequest.BodyPublishers.ofFile(body.toPath()) :
+                body == null ? HttpRequest.BodyPublishers.noBody() :
+                        HttpRequest.BodyPublishers.ofString(JsonOutput.toJson(body))
+        def req = HttpRequest.newBuilder(baseUri.resolve(path))
+                .timeout(Duration.ofSeconds(60))
+                .header('Authorization', 'Bearer ' + token)
+                .header('Content-Type', contentType)
+                .method(method, publisher).build()
+        def response = http.send(req, HttpResponse.BodyHandlers.ofString())
+        def result
+        try {
+            result = new JsonSlurper().parseText(response.body())
+        } catch (groovy.json.JsonException | IllegalArgumentException ignored) {
+            // Proxies can return a non-JSON error response.
+        }
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            def detail = result instanceof Map && result.error ? ": ${result.error}" : ''
+            throw new IOException("Exaroton ${method} ${path}: HTTP ${response.statusCode()}${detail}")
+        }
+        if (!(result instanceof Map) || !result.success) {
+            throw new IOException("Exaroton ${method} ${path}: ${result instanceof Map ? result.error : 'Invalid API response'}")
+        }
+        result.data
+    }
+
+    // Serialize setup with cleanup, including recording the ID returned by creation.
+    def duringSession(Closure action) {
+        synchronized (lifecycleLock) {
+            if (stopping.get()) {
+                throw new InterruptedException('Test session stopped')
+            }
+            action.call()
+        }
+    }
+
+    void cleanup() {
+        stopping.set(true)
+        synchronized (lifecycleLock) {
+            if (serverId == null) {
+                return
+            }
+            println "Stopping and deleting temporary Exaroton server ${serverId}..."
+            def deadline = System.nanoTime() + Duration.ofMinutes(5).toNanos()
+            Exception lastFailure
+            while (System.nanoTime() < deadline) {
+                try {
+                    def server = request('GET', "servers/${serverId}/")
+                    // Exaroton only permits deletion while offline (0) or crashed (7).
+                    if (server.status in [0, 7]) {
+                        request('DELETE', "servers/${serverId}/")
+                        println "Deleted temporary Exaroton server ${serverId}."
+                        serverId = null
+                        return
+                    }
+                    if (server.status == 1) {
+                        request('GET', "servers/${serverId}/stop/")
+                    }
+                    // Wait through starting, stopping, saving, and installation.
+                } catch (Exception failure) {
+                    lastFailure = failure
+                    System.err.println("Cleanup will retry: ${failure.message}")
+                }
+                Thread.sleep(2500)
+            }
+            throw new IOException("Could not delete temporary server ${serverId}. Delete it manually in the Exaroton panel.", lastFailure)
+        }
+    }
+
+    void run(String name, String minecraftVersion, String modsDir, List<File> jars, String testerUsername = '') {
+        if (!token) {
+            throw new IllegalArgumentException('Missing EXAROTON_TOKEN')
+        }
+        jars.each {
+            if (!it.isFile()) {
+                throw new IllegalArgumentException("Jar not found: ${it}")
+            }
+        }
+        def shutdownHook = new Thread({
+            try {
+                cleanup()
+            } catch (Exception failure) {
+                System.err.println(failure.message)
+            }
+        }, 'exaroton-test-cleanup')
+        Runtime.runtime.addShutdownHook(shutdownHook)
+        try {
+            def software = duringSession {
+                // Fabric versions include the loader suffix, e.g. "26.3 (0.20.1)".
+                request('GET', 'software?type=fabric').find {
+                    it.version == minecraftVersion || it.version?.startsWith(minecraftVersion + ' (')
+                }
+            }
+            if (software == null) {
+                throw new IllegalStateException("Exaroton has no Fabric software for Minecraft ${minecraftVersion}.")
+            }
+            duringSession {
+                def server = request('POST', 'servers/', [name: name, software: software.id])
+                serverId = server.id
+                println "Created temporary server ${server.address} (${serverId})."
+            }
+            // Creation can return before software installation has finished.
+            def deadline = System.nanoTime() + Duration.ofMinutes(5).toNanos()
+            while (duringSession { request('GET', "servers/${serverId}/").status } != 0) {
+                if (System.nanoTime() >= deadline) {
+                    throw new IOException('Timed out waiting for server installation')
+                }
+                Thread.sleep(2500)
+            }
+            def parts = modsDir.tokenize('/')
+            def path = ''
+            parts.each { part ->
+                path += '/' + part
+                def encoded = path.tokenize('/').collect { URLEncoder.encode(it, 'UTF-8').replace('+', '%20') }.join('/')
+                duringSession { request('PUT', "servers/${serverId}/files/data/${encoded}/", null, 'inode/directory') }
+            }
+            jars.each { jar ->
+                def encoded = (parts + jar.name).collect { URLEncoder.encode(it, 'UTF-8').replace('+', '%20') }.join('/')
+                println "Uploading ${jar.name}..."
+                duringSession { request('PUT', "servers/${serverId}/files/data/${encoded}/", jar, 'application/octet-stream') }
+            }
+            if (testerUsername) {
+                duringSession {
+                    request('PUT', "servers/${serverId}/playerlists/ops/", [entries: [testerUsername]])
+                }
+                println "Granted operator access to ${testerUsername}."
+            }
+            duringSession { request('GET', "servers/${serverId}/start/") }
+            println 'Test session running. Cancel the Gradle task (Ctrl+C) to stop and delete this server.'
+            def previousStatus = null
+            def lastPollingFailure = null
+            while (!stopping.get()) {
+                try {
+                    duringSession {
+                        def server = request('GET', "servers/${serverId}/")
+                        if (server.status != previousStatus) {
+                            println "Server ${server.address}: status ${server.status}"
+                            previousStatus = server.status
+                        }
+                        if (server.status == 1 && !server.players?.count) {
+                            // A stop timer may not be active yet; rejection must not end the session.
+                            request('POST', "servers/${serverId}/extend-time/", [time: 60])
+                        }
+                    }
+                    lastPollingFailure = null
+                } catch (IOException failure) {
+                    // Once started, only cancellation should end the test session.
+                    if (failure.message != lastPollingFailure) {
+                        System.err.println("Session update failed; keeping the test server and retrying: ${failure.message}")
+                        lastPollingFailure = failure.message
+                    }
+                }
+                Thread.sleep(60_000)
+            }
+        } finally {
+            cleanup()
+            try {
+                Runtime.runtime.removeShutdownHook(shutdownHook)
+            } catch (IllegalStateException ignored) {
+                // JVM shutdown is already running the same serialized cleanup.
+            }
+        }
+    }
+
+    static void main(String[] args) {
+        new ExarotonTestServer(System.getenv('EXAROTON_TOKEN')).run(
+                args[0], args[1], args[2], args.drop(3).collect { new File(it) },
+                System.getenv('EXAROTON_TESTER_USERNAME')?.trim() ?: '')
+    }
+}
+'''
+
+// A child JVM receives termination on Gradle cancellation; a hook in the long-lived
+// Gradle daemon would only run when the daemon itself exits.
+tasks.register('runExarotonTestServer', JavaExec) {
+    group = 'exaroton'
+    description = 'Creates a temporary Fabric server, runs until cancelled, then stops and deletes it'
+    dependsOn tasks.named('build')
+    classpath = configurations.exarotonRunner
+    mainClass = 'groovy.ui.GroovyMain'
+    doFirst {
+        def fabricApi = configurations.exarotonJars.files.findAll {
+            it.name.matches('fabric-api-[0-9].*\\.jar')
+        }
+        if (fabricApi.isEmpty()) {
+            throw new GradleException('Could not resolve the aggregated Fabric API jar.')
+        }
+        environment 'EXAROTON_TOKEN', obtainExarotonToken()
+        environment 'EXAROTON_TESTER_USERNAME', exarotonProps()?.getProperty('testerUsername')?.trim() ?: ''
+        def runnerFile = layout.buildDirectory.file('tmp/exaroton/ExarotonTestServer.groovy').get().asFile
+        runnerFile.parentFile.mkdirs()
+        runnerFile.setText(exarotonTestServerSource, 'UTF-8')
+        setArgs([
+                runnerFile.absolutePath,
+                providers.gradleProperty('exarotonTestName').getOrElse(
+                        exarotonProps()?.getProperty('testServerName') ?: 'wilpam-test'),
+                project.minecraft_version.toString(),
+                exarotonModsDir(),
+                tasks.named('jar').get().archiveFile.get().asFile.absolutePath,
+                *fabricApi.collect { it.absolutePath }
+        ])
+    }
 }
 
 tasks.register('deployToExaroton') {

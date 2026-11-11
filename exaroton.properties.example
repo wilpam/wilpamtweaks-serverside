@@ -2,3 +2,7 @@
 # Alternatively set the EXAROTON_TOKEN environment variable
 # or pass -PexarotonToken=<token> to Gradle.
 apiToken=
+# Preferred name for the disposable server (May add a suffix if taken).
+testServerName=wilpam-test
+# Minecraft username to grant operator access on the test server (optional).
+testerUsername=

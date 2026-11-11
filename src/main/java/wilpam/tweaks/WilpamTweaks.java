@@ -26,7 +26,7 @@ public class WilpamTweaks implements ModInitializer {
         ModItems.register();
         ModCustomRecipes.initialize();
 
-        // Put the server in an accessible placefffff
+        // Put the server in an accessible place
         ServerLifecycleEvents.SERVER_STARTING.register(ServerHolder::setServer);
         ServerLifecycleEvents.SERVER_STOPPED.register(ignored -> ServerHolder.setServer(null));
 

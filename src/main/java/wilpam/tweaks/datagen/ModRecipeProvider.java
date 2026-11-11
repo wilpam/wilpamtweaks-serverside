@@ -63,20 +63,18 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                     .unlockedBy("has_dough", has(ModItems.DOUGH.item()))
                     .save(output, ModItems.ID + ":slimeball_substrate_leaves");
 
-            /*LootCookingRecipeBuilder.smelting(
-                            Ingredient.of(Items.APPLE), RecipeCategory.FOOD, CookingBookCategory.FOOD,
-                            ModRandomLootTableProvider.BAKED_APPLE,
+            LootCookingRecipeBuilder.smelting(
+                            Ingredient.of(ModItems.OIL.item()), RecipeCategory.MISC, CookingBookCategory.MISC,
                             java.util.List.of(
-                                    LootResult.of(Items.APPLE, 10),
-                                    LootResult.of(Items.SUGAR, 4),
-                                    LootResult.of(Items.COOKIE, 2),
-                                    LootResult.of(Items.GOLDEN_APPLE, 1),
-                                    LootResult.of(Items.AIR, 3)
+                                    LootResult.of(ModItems.OIL.item(), 10),
+                                    LootResult.of(ModItems.OIL_WAX.item(), 5),
+                                    LootResult.of(ModItems.PREPOLYMERIZED_PLATE.item(), 2),
+                                    LootResult.of(Items.AIR, 1)
                             ),
                             0.2f, 200)
-                    .resultName("recipe.wilpam_tweaks.baked_apple_mystery_result")
-                    .unlockedBy("has_apple", has(Items.APPLE))
-                    .save(output, "wilpam_tweaks:baked_apple_mystery");*/
+                    .resultName("recipe.wilpam_tweaks.crude_oil_distillation")
+                    .unlockedBy("has_oil", has(ModItems.OIL.item()))
+                    .save(output, ModItems.ID + ":crude_oil_distillation");
 
             ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ModItems.SLIMEBALL_SUBSTRATE.item())
                     .requires(ModItems.DOUGH.item())
@@ -121,12 +119,26 @@ public final class ModRecipeProvider extends FabricRecipeProvider {
                     .unlockedBy("has_coal", has(Items.COAL))
                     .save(output, ModItems.ID + ":cook_coal");
 
+            SimpleCookingRecipeBuilder.smelting(
+                            Ingredient.of(ModItems.PREPOLYMERIZED_PLATE.item()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                            ModItems.PLASTIC_PLATE.item(), 1f, 200)
+                    .unlockedBy("has_prepolymerized_plate", has(ModItems.PREPOLYMERIZED_PLATE.item()))
+                    .save(output, ModItems.ID + ":cook_prepolymerized_plate");
+
+            ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, ModBlocks.PLASTIC_BLOCK_ITEM, 16)
+                    .pattern(" a ")
+                    .pattern("a a")
+                    .pattern(" a ")
+                    .define('a', ModItems.PLASTIC_PLATE.item())
+                    .unlockedBy("has_plastic", has(ModItems.PLASTIC_PLATE.item()))
+                    .save(output, ModItems.ID + ":plastic_plate");
+
             ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, Items.LEATHER, 3)
                     .pattern("aaa")
                     .pattern("bbb")
                     .pattern("aaa")
                     .define('a', Items.PAPER)
-                    .define('b', ModItems.OIL.item())
+                    .define('b', ModItems.OIL_WAX.item())
                     .unlockedBy("has_paper", has(Items.PAPER))
                     .save(output, ModItems.ID + ":synthetic_leather");
 

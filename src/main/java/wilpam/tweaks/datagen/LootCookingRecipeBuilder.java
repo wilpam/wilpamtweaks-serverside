@@ -24,13 +24,13 @@ import java.util.List;
 
 /**
  * Builder for a {@link LootCookingRecipe}, mirroring {@code SimpleCookingRecipeBuilder}
- * but with a loot table. Also generates the static list of results.
+ * with weighted results. {@link ModRandomLootTableProvider} generates the matching
+ * loot table from those results, using {@code cooking/<recipe path>} as its ID.
  */
 public class LootCookingRecipeBuilder implements RecipeBuilder {
     private final RecipeCategory craftingCategory;
     private final CookingBookCategory cookingBookCategory;
     private final Ingredient ingredient;
-    private final ResourceKey<LootTable> lootTable;
     private final List<LootResult> results;
     private final float experience;
     private final int cookingTime;
@@ -40,13 +40,15 @@ public class LootCookingRecipeBuilder implements RecipeBuilder {
     private String resultName = LootCookingRecipe.DEFAULT_RESULT_NAME_TRANSLATION_KEY;
 
     private LootCookingRecipeBuilder(RecipeCategory craftingCategory, CookingBookCategory cookingBookCategory,
-                                     Ingredient ingredient, ResourceKey<LootTable> lootTable, List<LootResult> results,
+                                     Ingredient ingredient, List<LootResult> results,
                                      float experience, int cookingTime, RecipeType<? extends AbstractCookingRecipe> type) {
         this.craftingCategory = craftingCategory;
         this.cookingBookCategory = cookingBookCategory;
         this.ingredient = ingredient;
-        this.lootTable = lootTable;
-        this.results = results;
+        if (results.isEmpty() || results.stream().anyMatch(result -> result.weight() <= 0)) {
+            throw new IllegalArgumentException("Loot cooking results must be nonempty and have positive weights");
+        }
+        this.results = List.copyOf(results);
         this.experience = experience;
         this.cookingTime = cookingTime;
         this.type = type;
@@ -54,23 +56,23 @@ public class LootCookingRecipeBuilder implements RecipeBuilder {
 
     @SuppressWarnings("unused")
     public static LootCookingRecipeBuilder smelting(Ingredient ingredient, RecipeCategory category,
-                                                    CookingBookCategory cookingCategory, ResourceKey<LootTable> lootTable,
+                                                    CookingBookCategory cookingCategory,
                                                     List<LootResult> results, float experience, int cookingTime) {
-        return new LootCookingRecipeBuilder(category, cookingCategory, ingredient, lootTable, results, experience, cookingTime, RecipeType.SMELTING);
+        return new LootCookingRecipeBuilder(category, cookingCategory, ingredient, results, experience, cookingTime, RecipeType.SMELTING);
     }
 
     @SuppressWarnings("unused")
     public static LootCookingRecipeBuilder smoking(Ingredient ingredient, RecipeCategory category,
-                                                   ResourceKey<LootTable> lootTable, List<LootResult> results,
+                                                   List<LootResult> results,
                                                    float experience, int cookingTime) {
-        return new LootCookingRecipeBuilder(category, CookingBookCategory.FOOD, ingredient, lootTable, results, experience, cookingTime, RecipeType.SMOKING);
+        return new LootCookingRecipeBuilder(category, CookingBookCategory.FOOD, ingredient, results, experience, cookingTime, RecipeType.SMOKING);
     }
 
     @SuppressWarnings("unused")
     public static LootCookingRecipeBuilder blasting(Ingredient ingredient, RecipeCategory category,
-                                                    CookingBookCategory cookingCategory, ResourceKey<LootTable> lootTable,
+                                                    CookingBookCategory cookingCategory,
                                                     List<LootResult> results, float experience, int cookingTime) {
-        return new LootCookingRecipeBuilder(category, cookingCategory, ingredient, lootTable, results, experience, cookingTime, RecipeType.BLASTING);
+        return new LootCookingRecipeBuilder(category, cookingCategory, ingredient, results, experience, cookingTime, RecipeType.BLASTING);
     }
 
     @Override
@@ -99,6 +101,8 @@ public class LootCookingRecipeBuilder implements RecipeBuilder {
     public void save(@NonNull RecipeOutput output, @NonNull ResourceKey<Recipe<?>> id) {
         Recipe.CommonInfo commonInfo = RecipeBuilder.createCraftingCommonInfo(true);
         AbstractCookingRecipe.CookingBookInfo bookInfo = new AbstractCookingRecipe.CookingBookInfo(cookingBookCategory, group);
+        ResourceKey<LootTable> lootTable = ResourceKey.create(Registries.LOOT_TABLE,
+                id.identifier().withPrefix("cooking/"));
         LootCookingRecipe recipe = new LootCookingRecipe(commonInfo, bookInfo, ingredient, lootTable, results, resultName, experience, cookingTime, type);
         AdvancementHolder advancementHolder = advancement.build(output, id, craftingCategory);
         output.accept(id, recipe, advancementHolder);

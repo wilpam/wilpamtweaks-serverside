@@ -25,7 +25,7 @@ public final class WilpamTweaksDataGen implements DataGeneratorEntrypoint {
 
     @Override
     public void buildReloadableRegistry(RegistrySetBuilder registryBuilder) {
-        // Make recipe references available to the standalone advancement provider.
+        // Make recipes available to the advancement and cooking loot table providers.
         registryBuilder.add(new MultiRegistryBootstrap() {
             @Override
             public Set<ResourceKey<? extends Registry<?>>> requestedRegistries() {
